@@ -4,7 +4,7 @@ class User < ApplicationRecord
     has_many :punch_items
     has_many :projects, through: :punch_items
 
-    validates :username, length: {minimum: 5}
+    validates :username, length: {minimum: 5}, uniqueness: true
     validates :company_name, length: {minimum: 3}
     validates :address, presence: true #better way?
     validates :trade_type, length: {minimum: 3}
