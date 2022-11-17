@@ -1,0 +1,2 @@
+class PunchItem < ApplicationRecord
+end
