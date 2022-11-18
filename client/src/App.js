@@ -11,6 +11,7 @@ function App() {
   return (
     <div className="App">
       <header>
+        Welcome to Builder Exchange
       </header>
         <div>
           <BrowserRouter>
@@ -19,7 +20,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/userlist" element={<UserLists />} />
-                <Route path="/projectlists" element={<ProjectLists />} />
+                <Route path="/projectlist" element={<ProjectLists />} />
               </Routes>
           </BrowserRouter>
         </div>

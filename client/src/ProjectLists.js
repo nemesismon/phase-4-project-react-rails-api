@@ -1,7 +1,11 @@
 import React from 'react'
 
 function ProjectLists(){
-    <div></div>
+    return (
+        <div>
+            <h1>Project Lists</h1>
+        </div>
+    )
 }
 
 export default ProjectLists

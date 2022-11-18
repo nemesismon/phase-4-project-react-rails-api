@@ -2,7 +2,9 @@ import React from './UserLists'
 
 function UserLists() {
     return (
-        <div></div>
+        <div>
+            <h1>User Lists</h1>
+        </div>
     )
 }
 
