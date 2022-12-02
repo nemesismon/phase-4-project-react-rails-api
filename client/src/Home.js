@@ -6,7 +6,7 @@ function Home () {
         <div>
             <h1>Home</h1>
             <br></br>
-            <p>A place to organize and manage your projects.</p>
+            <p>Project Management just got easier.</p>
             <br></br>
             <Link to={'/login'}>Login</Link>
         </div>

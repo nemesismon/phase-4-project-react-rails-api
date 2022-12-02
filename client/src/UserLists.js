@@ -1,4 +1,4 @@
-import React from './UserLists'
+import React from 'react'
 
 function UserLists() {
     return (

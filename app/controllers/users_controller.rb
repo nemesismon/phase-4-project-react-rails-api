@@ -1,8 +1,9 @@
 class UsersController < ApplicationController
 
     def create
-        user = User.create(create_params)
+        user = User.new(create_params)
         if user.valid?
+            user.save
             session[:user_id] = user.id
             render json: user, status: :created 
         else
@@ -41,11 +42,11 @@ class UsersController < ApplicationController
     private
 
     def create_params
-        permit.params(:username, :password, :password_confirmation, :company_name, :address, :trade_type, :point_of_contact, :phone, :email, :active)
+        params.permit(:username, :password, :password_confirmation, :company_name, :address, :trade_type, :point_of_contact, :phone, :email)
     end
 
     def update_params
-        permit.params(:company_name, :address, :trade_type, :point_of_contact, :phone, :email, :active)
+        params.permit(:company_name, :address, :trade_type, :point_of_contact, :phone, :email, :active)
     end
 
 end
