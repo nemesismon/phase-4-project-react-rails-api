@@ -1,6 +1,7 @@
-import React, { Redirect, useState } from 'react'
+import React, { useState } from 'react'
+import { Navigate } from 'react-router-dom'
 
-function Login() {
+function Login({setSessionUserData, sessionUserData}) {
 
     const[username, setUsername] = useState("")
     const[password, setPassword] = useState("")
@@ -12,7 +13,6 @@ function Login() {
     const[phone, setPhone] = useState(0)
     const[email, setEmail] = useState("")
     const[loginCreate, setLoginCreate] = useState(true) 
-    const[userData, setUserData] = useState("")
 
     const handleUserLogin = (e) => {
         e.preventDefault();
@@ -27,10 +27,9 @@ function Login() {
             }),
         })
         .then((r) => r.json())
-        .then((resp) => setUserData(resp))
+        .then((resp) => setSessionUserData(resp))
         setUsername("")
         setPassword("")
-        console.log(userData)
     }
 
     const handleUserCreate = (e) => {
@@ -52,41 +51,40 @@ function Login() {
                 email: email
             }),
         }) .then((res) => res.json())
-           .then((data) => setUserData(data))
+           .then((data) => setSessionUserData(data))
+           //redirect to /userlist
     }
 
     const loginDisplay = () => {
-        if (userData === "") {
-        return (
-            <div>
-                <form onSubmit={handleUserLogin}>
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <ul></ul>
-                    <input
-                        type="text"
-                        name="password"
-                        placeholder="Password"
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <ul></ul>
-                    <button type="submit">Submit</button>
-                </form>
-            </div>
-        )} else {
+        if (sessionUserData === null) {
             return (
-                            // <Redirect to="/userlist"/>
-                        <div>
-                            <p>Dis virk, yes?</p>
-                        </div>
-                    )
-            }
+                <div>
+                    <form onSubmit={handleUserLogin}>
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                        <ul></ul>
+                        <input
+                            type="text"
+                            name="password"
+                            placeholder="Password"
+                            value={password} 
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <ul></ul>
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+            )} 
+        else {
+            return (
+                <Navigate to='/userlist' replace />
+            )
+        }
     }
 
     const createDisplay = () => {
@@ -174,7 +172,7 @@ function Login() {
     const toggleButton = () => setLoginCreate(!loginCreate)
 
     const displayChanger = () => {
-        if (loginCreate === true && userData === "") {
+        if (loginCreate === true) {
             return (
                 <>
                     <h1>Login</h1>
