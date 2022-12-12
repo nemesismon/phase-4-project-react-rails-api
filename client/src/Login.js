@@ -14,6 +14,10 @@ function Login({setSessionUserData, sessionUserData}) {
     const[email, setEmail] = useState("")
     const[loginCreate, setLoginCreate] = useState(true) 
 
+    //kill Navigate after login for logout implementation
+
+    // console.log(sessionUserData)
+
     const handleUserLogin = (e) => {
         e.preventDefault();
         fetch('/login', {
@@ -30,14 +34,17 @@ function Login({setSessionUserData, sessionUserData}) {
         .then((resp) => setSessionUserData(resp))
         setUsername("")
         setPassword("")
+        return (
+            <Navigate to='/userlists' replace />
+        )
     }
 
     const handleUserCreate = (e) => {
         e.preventDefault()
-        fetch("/users", {
-            method: "POST",
+        fetch('/users', {
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 username: username,
@@ -52,7 +59,9 @@ function Login({setSessionUserData, sessionUserData}) {
             }),
         }) .then((res) => res.json())
            .then((data) => setSessionUserData(data))
-           //redirect to /userlist
+            return (
+                <Navigate to='/userlist' replace />
+            )
     }
 
     const loginDisplay = () => {

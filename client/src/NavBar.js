@@ -11,16 +11,16 @@ function NavBar() {
                         Home &ensp;
                 </NavLink>
                 <NavLink style={{textDecoration: 'none'}}
-                    to="/login">
-                        Login &ensp;
-                </NavLink>
-                <NavLink style={{textDecoration: 'none'}}
                     to="/userlist">
-                        User Lists &ensp;
+                        Punch List &ensp;
                 </NavLink>
                 <NavLink style={{textDecoration: 'none'}}
                     to="/projectlist">
-                        Project Lists &ensp;
+                        Project List &ensp;
+                </NavLink>
+                <NavLink style={{textDecoration: 'none'}}
+                    to="/login">
+                        Login &ensp;
                 </NavLink>
             </b>
         </div>

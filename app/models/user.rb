@@ -7,7 +7,7 @@ class User < ApplicationRecord
     validates :username, length: {minimum: 5}, uniqueness: true
     validates :company_name, length: {minimum: 3}
     validates :address, presence: true #better way?
-    validates :trade_type, length: {minimum: 3}
+    validates :trade_type, presence: true
     validates :point_of_contact, length: {minimum: 5}
     validates :phone, length: {is: 10}
     validates :email, email: true
