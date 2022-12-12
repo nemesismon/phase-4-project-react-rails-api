@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import './UserLists.css'
 
-function ProjectLists({ sessionUserData }) {
+function ProjectLists({ sessionUserData, loginStatus }) {
 
     const [sessionData, setSessionData] = useState(null)
     const [sessionProject, setSessionProject] = useState(false)
@@ -11,9 +11,9 @@ function ProjectLists({ sessionUserData }) {
     const [projOwnerName, setProjOwnerName] = useState(null)
     const [projCompBy, setProjCompBy] = useState(null)
 
-    if (sessionUserData === null) {
+    if (sessionProject === false) {
         return (
-            <p>Loading...</p>
+            <p>Unauthorized - please login</p>
         )
     } else if (sessionUserData !== null && sessionProject === false) {
         fetch('/projects')
@@ -23,38 +23,38 @@ function ProjectLists({ sessionUserData }) {
     }
     
     const projectsList = () => {
-        if (sessionData === null) {
+        if (loginStatus === false) {
             return (
                 <h3>Unathorized - please login</h3>
             )
-        } else if (sessionData !== null && sessionProject === false) {
+        } else if (sessionData !== null && loginStatus === true) {
+            const projList = sessionData.map((item) => {
+                return (
+                    <tbody>
+                    <tr key={item.id}>
+                        <td>{item.title}</td>
+                        <td>{item.address}</td>
+                        <td>{item.owner_name}</td>
+                        {item.users.map((user) => {
+                            return (
+                                <>
+                                <td>{user.company_name}</td>
+                                <td>{user.point_of_contact}</td>
+                                <td>{user.phone}</td>
+                                </>
+                            )
+                        })}
+                        <td>{item.complete_by}</td>
+                        <button>Mark Complete</button>
+                    </tr>
+                    </tbody>
+                )
+            })
+            return projList
+        } else {
             return (
                 <h3>Loading...</h3>
             )
-        } else {
-            const projList = sessionData.map((item) => {
-            return (
-                <tbody>
-                <tr key={item.id}>
-                    <td>{item.title}</td>
-                    <td>{item.address}</td>
-                    <td>{item.owner_name}</td>
-                    {item.users.map((user) => {
-                        return (
-                            <>
-                            <td>{user.company_name}</td>
-                            <td>{user.point_of_contact}</td>
-                            <td>{user.phone}</td>
-                            </>
-                        )
-                    })}
-                    <td>{item.complete_by}</td>
-                    <button>Mark Complete</button>
-                </tr>
-                </tbody>
-            )
-        })
-        return projList
         }
     }
 

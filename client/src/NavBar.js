@@ -1,7 +1,8 @@
 import React from 'react'
 import {NavLink} from 'react-router-dom'
 
-function NavBar() {
+function NavBar({ loginStatus }) {
+
     return (
         <div>
             <br></br>
@@ -20,7 +21,7 @@ function NavBar() {
                 </NavLink>
                 <NavLink style={{textDecoration: 'none'}}
                     to="/login">
-                        Login &ensp;
+                        {loginStatus ? 'Logout' : 'Login'} &ensp;
                 </NavLink>
             </b>
         </div>

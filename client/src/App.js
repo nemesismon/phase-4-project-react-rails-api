@@ -28,12 +28,12 @@ function App() {
       </header>
         <div>
           <BrowserRouter>
-            <NavBar />
+            <NavBar loginStatus={loginStatus}/>
               <Routes>
-                <Route path="/" element={<Home sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} setLoginStatus={setLoginStatus}/>} />
-                <Route path="/userlist" element={<UserLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData}/>} />
-                <Route path="/projectlist" element={<ProjectLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData}/>} />
-                <Route path="/login" element={<Login sessionUserData={sessionUserData} setSessionUserData={setSessionUserData}/>} />
+                <Route path="/" element={<Home />} />
+                <Route path="/userlist" element={<UserLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus}/>} />
+                <Route path="/projectlist" element={<ProjectLists sessionUserData={sessionUserData} loginStatus={loginStatus}/>} />
+                <Route path="/login" element={<Login sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} setLoginStatus={setLoginStatus}/>} />
               </Routes>
           </BrowserRouter>
         </div>

@@ -1,23 +1,26 @@
 import React, { useState } from 'react'
 import './UserLists.css'
 
-function UserLists({sessionUserData, setSessionUserData}) {
+function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
 
     // const [userListItems, setUserListItems] = useState(null)
     const [sessionToggle, setSessionToggle] = useState(false)
 
-    if (sessionUserData === null) {
-        console.log(sessionUserData)
+    if (loginStatus === false) {
         return (
-            <p>Loading...</p>
+            <p>Unauthorized - please login</p>
         )}
-    else if (sessionUserData !== null && sessionToggle === false) {
+    else if (sessionUserData !== null && sessionToggle === true) {
             console.log(sessionUserData)
             fetch(`/users/${sessionUserData.id}`)
             .then((r) => r.json())
             .then((data) => setSessionUserData(data))
             setSessionToggle(true)
-    } 
+    } else {
+        return (
+            <p>Loading...</p>
+        )
+    }
 
     const listPunchItems = () => {
         const theList = sessionUserData.punch_items.map((item) => {

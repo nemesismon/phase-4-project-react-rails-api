@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 
-function Login({setSessionUserData, sessionUserData}) {
+function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus}) {
 
     const[username, setUsername] = useState("")
     const[password, setPassword] = useState("")
@@ -13,10 +13,6 @@ function Login({setSessionUserData, sessionUserData}) {
     const[phone, setPhone] = useState(0)
     const[email, setEmail] = useState("")
     const[loginCreate, setLoginCreate] = useState(true) 
-
-    //kill Navigate after login for logout implementation
-
-    // console.log(sessionUserData)
 
     const handleUserLogin = (e) => {
         e.preventDefault();
@@ -178,26 +174,43 @@ function Login({setSessionUserData, sessionUserData}) {
         )
     }
 
+    const logout = () => {
+        fetch(`/logout/${sessionUserData.id}`)
+        setLoginStatus(false)
+        setSessionUserData(null)
+    }
+
     const toggleButton = () => setLoginCreate(!loginCreate)
 
     const displayChanger = () => {
-        if (loginCreate === true) {
-            return (
-                <>
-                    <h1>Login</h1>
-                    <button onClick={() => toggleButton()}>{loginCreate ? "Signup" : "Login"}{() => displayChanger()}</button>
-                    <br></br>
-                    {loginDisplay()}
-                </>
-            )
+
+        if (loginStatus === false) {
+            if (loginCreate === true) {
+                return (
+                    <>
+                        <h1>Login</h1>
+                        <button onClick={() => toggleButton()}>{loginCreate ? "Signup" : "Login"}{() => displayChanger()}</button>
+                        <br></br>
+                        {loginDisplay()}
+                    </>
+                )
+            } else {
+                return (
+                    <>
+                        <h1>Create Account</h1>
+                        {/* Redundent?? */}
+                        <button onClick={() => toggleButton()}>{loginCreate ? "Signup" : "Login"}{() => displayChanger()}</button>
+                        <br></br>
+                        {createDisplay()}
+                    </>
+                )
+            }
         } else {
             return (
                 <>
-                    <h1>Create Account</h1>
-                    {/* Redundent?? */}
-                    <button onClick={() => toggleButton()}>{loginCreate ? "Signup" : "Login"}{() => displayChanger()}</button>
-                    <br></br>
-                    {createDisplay()}
+                    <h1>Logout</h1>
+                    <h4>Click to logout</h4>
+                    <button onClick={() => logout()}>Logout</button>
                 </>
             )
         }
