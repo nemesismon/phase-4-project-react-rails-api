@@ -11,6 +11,7 @@ function App() {
 
   const [sessionUserData, setSessionUserData] = useState(null)
   const [loginStatus, setLoginStatus] = useState(false)
+  const [logoutStatus, setLogoutStatus] = useState(false)
   
   useEffect(() => {
     fetch('/me')
@@ -18,6 +19,12 @@ function App() {
     .then((data) => setSessionUserData(data))
     setLoginStatus(true)
   }, [])
+
+  if (logoutStatus === true) {
+    setSessionUserData(null)
+    setLoginStatus(false)
+    setLogoutStatus(false)
+  }
 
   console.log(sessionUserData)
 
@@ -33,7 +40,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/userlist" element={<UserLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus}/>} />
                 <Route path="/projectlist" element={<ProjectLists sessionUserData={sessionUserData} loginStatus={loginStatus} />} />
-                <Route path="/login" element={<Login sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} setLoginStatus={setLoginStatus}/>} />
+                <Route path="/login" element={<Login sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} setLoginStatus={setLoginStatus} setLogoutStatus={setLogoutStatus}/>} />
               </Routes>
           </BrowserRouter>
         </div>

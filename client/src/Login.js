@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 
-function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus}) {
+function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus, setLogoutStatus}) {
 
     const[username, setUsername] = useState("")
     const[password, setPassword] = useState("")
@@ -179,7 +179,9 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
     }
 
     const logout = () => {
-        fetch(`/logout/${sessionUserData.id}`)
+        fetch('/logout', {
+            method: 'DELETE'
+        })
         setLoginStatus(false)
         setSessionUserData(null)
     }

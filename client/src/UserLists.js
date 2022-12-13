@@ -6,12 +6,19 @@ function UserLists({sessionUserData, loginStatus}) {
     const [userSessionToggle, setUserSessionToggle] = useState(false)
     const [userSession, setUserSession] = useState(null)
 
-    if (userSessionToggle === false && sessionUserData !== null) {
-            console.log(sessionUserData.id)
+    console.log(sessionUserData)
+
+
+    if (sessionUserData === null && userSession === true) {
+        return (
+            <p>Loading...</p>
+        )
+    } else if (userSession === null && sessionUserData !== null && loginStatus === true && userSessionToggle === false) {
             fetch(`/users/${sessionUserData.id}`)
             .then((r) => r.json())
             .then((data) => setUserSession(data))
             setUserSessionToggle(true)
+            console.log(sessionUserData.id)
     }
 
     const listPunchItems = () => {
@@ -37,7 +44,7 @@ function UserLists({sessionUserData, loginStatus}) {
                 <p>Unauthorized - please login</p>
             </div>
         )
-    } else if (userSession !== null) {
+    } else if (userSession !== null && userSessionToggle === true) {
         return (
             <div>
                 <h1>Punch List</h1>
