@@ -28,6 +28,8 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
         })
         .then((r) => r.json())
         .then((resp) => setSessionUserData(resp))
+        setLoginCreate(true)
+        setLoginStatus(true)
         setUsername("")
         setPassword("")
         return (
@@ -36,7 +38,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
     }
 
     const handleUserCreate = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         fetch('/users', {
             method: 'POST',
             headers: {
@@ -55,8 +57,10 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
             }),
         }) .then((res) => res.json())
            .then((data) => setSessionUserData(data))
+            setLoginCreate(true)
+            setLoginStatus(true)
             return (
-                <Navigate to='/userlist' replace />
+                <Navigate to='/userlists' replace />
             )
     }
 
@@ -210,7 +214,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                 <>
                     <h1>Logout</h1>
                     <h4>Click to logout</h4>
-                    <button onClick={() => logout()}>Logout</button>
+                    <button onClick={() => logout(setLoginStatus(false))}>Logout</button>
                 </>
             )
         }

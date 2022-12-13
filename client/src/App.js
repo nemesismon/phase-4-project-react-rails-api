@@ -32,7 +32,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/userlist" element={<UserLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus}/>} />
-                <Route path="/projectlist" element={<ProjectLists sessionUserData={sessionUserData} loginStatus={loginStatus}/>} />
+                <Route path="/projectlist" element={<ProjectLists sessionUserData={sessionUserData} loginStatus={loginStatus} />} />
                 <Route path="/login" element={<Login sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} setLoginStatus={setLoginStatus}/>} />
               </Routes>
           </BrowserRouter>

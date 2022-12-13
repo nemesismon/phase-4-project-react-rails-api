@@ -1,29 +1,21 @@
 import React, { useState } from 'react'
 import './UserLists.css'
 
-function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
+function UserLists({sessionUserData, loginStatus}) {
 
-    // const [userListItems, setUserListItems] = useState(null)
-    const [sessionToggle, setSessionToggle] = useState(false)
+    const [userSessionToggle, setUserSessionToggle] = useState(false)
+    const [userSession, setUserSession] = useState(null)
 
-    if (loginStatus === false) {
-        return (
-            <p>Unauthorized - please login</p>
-        )}
-    else if (sessionUserData !== null && sessionToggle === true) {
-            console.log(sessionUserData)
+    if (userSessionToggle === false && sessionUserData !== null) {
+            console.log(sessionUserData.id)
             fetch(`/users/${sessionUserData.id}`)
             .then((r) => r.json())
-            .then((data) => setSessionUserData(data))
-            setSessionToggle(true)
-    } else {
-        return (
-            <p>Loading...</p>
-        )
+            .then((data) => setUserSession(data))
+            setUserSessionToggle(true)
     }
 
     const listPunchItems = () => {
-        const theList = sessionUserData.punch_items.map((item) => {
+        const theList = userSession.punch_items.map((item) => {
             return (
                         <tr key={item.id}>
                             <td>{item.task}</td>
@@ -38,17 +30,18 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
     }
 
     const sessionCheck = () => {
-    if (sessionUserData === null) {
+        console.log(userSession)
+    if (userSessionToggle === false) {
         return (
             <div>
                 <p>Unauthorized - please login</p>
             </div>
         )
-    } else {
+    } else if (userSession !== null) {
         return (
             <div>
                 <h1>Punch List</h1>
-                    <h4>Welcome, {sessionUserData.point_of_contact}!</h4>
+                    <h4>Welcome, {userSession.point_of_contact}!</h4>
                     <div>
                         <table align='center'>
                             <tr>
@@ -58,17 +51,21 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                                 <th>Complete by:</th>
                                 <th>Status</th>
                             </tr>
-                            {listPunchItems()}
+                                {listPunchItems()}
                         </table>
                     </div>
             </div>
         )
+    } else {
+        return (
+            <h4>Loading...</h4>
+        )
     }}
 
     return (
-        <>
-        {sessionCheck()}
-        </>
+        <div>
+            {sessionCheck()}
+        </div>
     )
 }
 
