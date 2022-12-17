@@ -1,32 +1,27 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import './UserLists.css'
 
-function ProjectLists({ loginStatus }) {
+function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessionProjData }) {
 
-    const [projSession, setProjSession] = useState(null)
-    const [projSessionToggle, setProjSessionToggle] = useState(false)
     const [createProject, setCreateProject] = useState(false)
-    const [projTitle, setProjTitle] = useState(null)
-    const [projAddress, setProjAddress] = useState(null)
-    const [projOwnerName, setProjOwnerName] = useState(null)
+    const [projTitle, setProjTitle] = useState("")
+    const [projAddress, setProjAddress] = useState("")
+    const [projOwnerName, setProjOwnerName] = useState("")
     const [projCompBy, setProjCompBy] = useState(null)
 
-    if (projSessionToggle === false && projSession === null && loginStatus === true) {
+    const getProjects = () => {
         fetch('/projects')
         .then((r) => r.json())
-        .then((data) => setProjSession(data))
-        setProjSessionToggle(true)
-    } else if (projSessionToggle === true && loginStatus === false ) {
-        setProjSession(null)
+        .then((data) => setSessionProjData(data))
     }
-
+    
     const projectsList = () => {
-        if (projSession === null) {
+        if (sessionProjData === null && loginStatus === true) {
             return (
                 <p>Loading...</p>
             )
-        } else if (projSession !== null) {
-            const projList = projSession.map((item) => {
+        } else if (sessionProjData !== null) {
+            const projList = sessionProjData.map((item) => {
                 return (
                     <tbody>
                     <tr key={item.id}>
@@ -52,14 +47,7 @@ function ProjectLists({ loginStatus }) {
         }
     }
 
-    const sessionCheck = () => {
-        if ( projSessionToggle === false) {
-            return (
-                <div>
-                    <p>Unauthorized - please login</p>
-                </div>
-            )
-        } else {
+    const punchList = () => {
             return (
                 <div>
                     <h1>Project List</h1>
@@ -84,7 +72,7 @@ function ProjectLists({ loginStatus }) {
                     </div>
                 </div>
             )
-        }}
+        }
 
         const createProjectForm = () => {
             return (
@@ -133,16 +121,25 @@ function ProjectLists({ loginStatus }) {
         }
 
         const viewToggle = () => {
-            if (createProject === false) {
+            if (sessionUserData !== null && loginStatus === true) {
+                getProjects()
+                if (createProject === false) {
+                    return (
+                        <div>
+                            {punchList()}
+                        </div>
+                    )
+                } else {
+                    return (
+                        <div>
+                            {createProjectForm()}
+                        </div>
+                    )
+                }
+            } else if (loginStatus === false) {
                 return (
                     <div>
-                        {sessionCheck()}
-                    </div>
-                )
-            } else {
-                return (
-                    <div>
-                        {createProjectForm()}
+                        <h4>Unauthorized - please login</h4>
                     </div>
                 )
             }

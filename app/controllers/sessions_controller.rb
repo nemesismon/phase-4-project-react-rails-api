@@ -21,7 +21,7 @@ class SessionsController < ApplicationController
     def destroy
         user = User.find_by(id: session[:user_id])
         if user
-            session.delete :user_id
+            session.clear
             head :no_content
         else
             render json: {error: "No record found"}, status: :not_found

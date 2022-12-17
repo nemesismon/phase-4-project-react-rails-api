@@ -3,13 +3,6 @@ import { Link } from 'react-router-dom'
 
 function Home () {
 
-    // if (sessionUserData === null && loginStatus === false) {
-    //     fetch('/me')
-    //     .then((r) => r.json())
-    //     .then((data) => setSessionUserData(data))
-    //     setLoginStatus(true)
-    // }
-
     return (
         <div>
             <h1>Home</h1>

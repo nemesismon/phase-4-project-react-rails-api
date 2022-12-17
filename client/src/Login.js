@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 
-function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus, setLogoutStatus}) {
+function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus, setSessionProjData}) {
 
     const[username, setUsername] = useState("")
     const[password, setPassword] = useState("")
@@ -12,7 +12,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
     const[poc, setPoc] = useState("")
     const[phone, setPhone] = useState(0)
     const[email, setEmail] = useState("")
-    const[loginCreate, setLoginCreate] = useState(true) 
+    const[loginCreate, setLoginCreate] = useState(true)
 
     const handleUserLogin = (e) => {
         e.preventDefault();
@@ -28,12 +28,11 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
         })
         .then((r) => r.json())
         .then((resp) => setSessionUserData(resp))
-        setLoginCreate(true)
         setLoginStatus(true)
         setUsername("")
         setPassword("")
         return (
-            <Navigate to='/userlists' replace />
+            <Navigate to='/' replace />
         )
     }
 
@@ -57,15 +56,23 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
             }),
         }) .then((res) => res.json())
            .then((data) => setSessionUserData(data))
-            setLoginCreate(true)
             setLoginStatus(true)
+            setUsername("")
+            setPassword("")
+            setPasswordConfirmation("")
+            setCompanyName("")
+            setAddress("")
+            setTradeType("")
+            setPoc("")
+            setPhone(0)
+            setEmail("")
             return (
-                <Navigate to='/userlists' replace />
+                <Navigate to='/' replace />
             )
     }
 
     const loginDisplay = () => {
-        if (sessionUserData === null) {
+        if (sessionUserData === null && loginStatus === false) {
             return (
                 <div>
                     <form onSubmit={handleUserLogin}>
@@ -88,8 +95,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                         <button type="submit">Submit</button>
                     </form>
                 </div>
-            )} 
-        else {
+        )} else {
             return (
                 <Navigate to='/userlist' replace />
             )
@@ -180,22 +186,22 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
 
     const logout = () => {
         fetch('/logout', {
-            method: 'DELETE'
+            method: 'DELETE',
         })
-        setLoginStatus(false)
         setSessionUserData(null)
+        setSessionProjData(null)
+        setLoginStatus(false)
     }
 
     const toggleButton = () => setLoginCreate(!loginCreate)
 
     const displayChanger = () => {
-
         if (loginStatus === false) {
             if (loginCreate === true) {
                 return (
                     <>
                         <h1>Login</h1>
-                        <button onClick={() => toggleButton()}>{loginCreate ? "Signup" : "Login"}{() => displayChanger()}</button>
+                        <button onClick={() => toggleButton()}>{loginCreate ? "Signup" : "Login"}</button>
                         <br></br>
                         {loginDisplay()}
                     </>
@@ -205,7 +211,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                     <>
                         <h1>Create Account</h1>
                         {/* Redundent?? */}
-                        <button onClick={() => toggleButton()}>{loginCreate ? "Signup" : "Login"}{() => displayChanger()}</button>
+                        <button onClick={() => toggleButton()}>{loginCreate ? "Signup" : "Login"}</button>
                         <br></br>
                         {createDisplay()}
                     </>
@@ -216,7 +222,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                 <>
                     <h1>Logout</h1>
                     <h4>Click to logout</h4>
-                    <button onClick={() => logout(setLoginStatus(false))}>Logout</button>
+                    <button onClick={() => logout()}>Logout</button>
                 </>
             )
         }

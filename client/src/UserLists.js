@@ -1,72 +1,51 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './UserLists.css'
 
 function UserLists({sessionUserData, loginStatus}) {
 
-    const [userSessionToggle, setUserSessionToggle] = useState(false)
-    const [userSession, setUserSession] = useState(null)
-
-    console.log(sessionUserData)
-
-
-    if (sessionUserData === null && userSession === true) {
-        return (
-            <p>Loading...</p>
-        )
-    } else if (userSession === null && sessionUserData !== null && loginStatus === true && userSessionToggle === false) {
-            fetch(`/users/${sessionUserData.id}`)
-            .then((r) => r.json())
-            .then((data) => setUserSession(data))
-            setUserSessionToggle(true)
-            console.log(sessionUserData.id)
-    }
-
     const listPunchItems = () => {
-        const theList = userSession.punch_items.map((item) => {
-            return (
-                        <tr key={item.id}>
-                            <td>{item.task}</td>
-                            <td>{item.area}</td>
-                            <td>{item.notes}</td>
-                            <td>{item.complete_by}</td>
-                            <button>Mark Complete</button>
-                        </tr>
-            )
-        })
+            const theList = sessionUserData.punch_items.map((item) => {
+                return (
+                    <tr key={item.id}>
+                        <td>{item.task}</td>
+                        <td>{item.area}</td>
+                        <td>{item.notes}</td>
+                        <td>{item.complete_by}</td>
+                        <button>Mark Complete</button>
+                    </tr>
+                )
+            })
         return theList
     }
 
     const sessionCheck = () => {
-        console.log(userSession)
-    if (userSessionToggle === false) {
-        return (
-            <div>
-                <p>Unauthorized - please login</p>
-            </div>
-        )
-    } else if (userSession !== null && userSessionToggle === true) {
-        return (
-            <div>
-                <h1>Punch List</h1>
-                    <h4>Welcome, {userSession.point_of_contact}!</h4>
-                    <div>
-                        <table align='center'>
-                            <tr>
-                                <th>Task</th>
-                                <th>Area</th>
-                                <th>Notes</th>
-                                <th>Complete by:</th>
-                                <th>Status</th>
-                            </tr>
-                                {listPunchItems()}
-                        </table>
-                    </div>
-            </div>
-        )
-    } else {
-        return (
-            <h4>Loading...</h4>
-        )
+        if (loginStatus === false) {
+            return (
+                <h4>Unauthorized - please login</h4>
+            )
+        } else if (sessionUserData === null && loginStatus === true) {
+            return (
+                <h4>Loading...</h4>
+            )
+        } else if (sessionUserData !== null && loginStatus === true) {
+            return (
+                <div>
+                    <h1>Punch List</h1>
+                        <h4>Welcome, {sessionUserData.point_of_contact}!</h4>
+                        <div>
+                            <table align='center'>
+                                <tr>
+                                    <th>Task</th>
+                                    <th>Area</th>
+                                    <th>Notes</th>
+                                    <th>Complete by:</th>
+                                    <th>Status</th>
+                                </tr>
+                                    {listPunchItems()}
+                            </table>
+                        </div>
+                </div>
+            )
     }}
 
     return (
