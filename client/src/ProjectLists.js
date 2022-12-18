@@ -21,6 +21,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                 <p>Loading...</p>
             )
         } else if (sessionProjData !== null) {
+            let i = 1
             const projList = sessionProjData.map((item) => {
                 return (
                     <tbody>
@@ -29,14 +30,26 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                         <td>{item.address}</td>
                         <td>{item.owner_name}</td>
                         {item.users.map((user) => {
+                            if (i <= 1) {
                             return (
                                 <>
-                                <td>{user.company_name}</td>
+                                <td key={user.id}>{user.company_name}</td>
                                 <td>{user.point_of_contact}</td>
                                 <td>{user.phone}</td>
                                 </>
                             )
-                        })}
+                        } else {
+                                return (
+                                    <tr key={user.id}>
+                                        <td>{user.company_name}</td>
+                                        <td>{user.point_of_contact}</td>
+                                        <td>{user.phone}</td>
+                                    </tr>
+                                )
+                            }
+                        },
+                        i++
+                        )}
                         <td>{item.complete_by}</td>
                         <button>Mark Complete</button>
                     </tr>
@@ -65,7 +78,6 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                                     <th>Point of Contact</th>
                                     <th>Phone</th>
                                     <th>Complete by:</th>
-                                    <th>Status</th>
                                 </tr>
                             {projectsList()}
                         </table>
