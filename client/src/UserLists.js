@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import './UserLists.css'
 
-function UserLists({sessionUserData, loginStatus}) {
+function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
 
     const [createPunchItem, setCreatePunchItem] = useState(false)
     const [itemUserID, setItemUserID] = useState(null)
@@ -11,21 +11,6 @@ function UserLists({sessionUserData, loginStatus}) {
     const [itemNotes, setItemNotes] = useState("")
     const [itemCompBy, setItemCompBy] = useState(null)
 
-    const listPunchItems = () => {
-            const theList = sessionUserData.punch_items.map((item) => {
-                return (
-                    <tr key={item.id}>
-                        <td>{item.task}</td>
-                        <td>{item.area}</td>
-                        <td>{item.notes}</td>
-                        <td>{item.complete_by}</td>
-                        <button>Mark Complete</button>
-                    </tr>
-                )
-            })
-        return theList
-    }
-
     const handleItemCreate = (e) => {
         e.preventDefault();
         fetch('/punch_items', {
@@ -33,18 +18,18 @@ function UserLists({sessionUserData, loginStatus}) {
             headers: {
                 'Content-type': 'application/json',
             },
-            body:
-                JSON.stringify({
+            body: JSON.stringify({
                     user_id: itemUserID,
                     project_id: itemProjID,
                     task: itemTask,
                     area: itemArea,
                     notes: itemNotes,
                     complete_by: itemCompBy,
+                    active: true,
                 }),
         })
         .then((r) => r.json())
-        .then((data) => console.log(data))
+        .then((data) => setSessionUserData(data))
         setItemUserID()
         setItemProjID()
         setItemTask("")
@@ -53,7 +38,41 @@ function UserLists({sessionUserData, loginStatus}) {
         setItemCompBy()
         setCreatePunchItem(false)
     }
+    
+    const handleCompleteItem = (e, id) => {
+        e.preventDefault();
+        fetch(`/punch_items/${id}`, {
+            method: 'DELETE',
+        })
+        .then((r) => r.json())
+        .then((data) => setSessionUserData(data))
+    }
 
+    const listPunchItems = () => {
+        console.log(sessionUserData)
+        const theList = sessionUserData.punch_items.map((item) => {
+            if (item.active === true) {
+                return (
+                    <tr key={item.id}>
+                        <td>{item.task}</td>
+                        <td>{item.area}</td>
+                        <td>{item.notes}</td>
+                        <td>{item.complete_by}</td>
+                        <input type="button" value="Mark Complete" onClick={e => handleCompleteItem(e, item.id)}/>
+                    </tr>
+                )
+            } else { return null }
+        })
+        console.log(theList)
+        if (theList[0] === undefined || theList[0] === null) {
+            return (
+                <h4>There are currently no puch items for this user!</h4>
+            )
+        } else {
+            return theList
+        }
+        }
+    
     const sessionCheck = () => {
         if (loginStatus === false) {
             return (

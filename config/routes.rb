@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   
   resources :projects, except: :destroy
-  resources :punch_items, except: :destroy
+  resources :punch_items
   resources :users, except: :destroy
 
   get '/me', to: 'sessions#show'

@@ -4,10 +4,11 @@ import './UserLists.css'
 function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessionProjData }) {
 
     const [createProject, setCreateProject] = useState(false)
+    const [projSession, setProjSession] = useState(false)
     const [projTitle, setProjTitle] = useState("")
     const [projAddress, setProjAddress] = useState("")
     const [projOwnerName, setProjOwnerName] = useState("")
-    const [projCompBy, setProjCompBy] = useState(null)
+    const [projCompBy, setProjCompBy] = useState()
 
     const getProjects = () => {
         fetch('/projects')
@@ -20,9 +21,10 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
             return (
                 <p>Loading...</p>
             )
-        } else if (sessionProjData !== null) {
+        } else if (sessionProjData !== null && loginStatus === true) {
             let i = 1
             const projList = sessionProjData.map((item) => {
+                //Fix for duplicates
                 return (
                     <tbody>
                     <tr key={item.id}>
@@ -30,22 +32,28 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                         <td>{item.address}</td>
                         <td>{item.owner_name}</td>
                         {item.users.map((user) => {
+                            //Option for no attached users
                             if (i <= 1) {
-                            return (
-                                <>
-                                <td key={user.id}>{user.company_name}</td>
-                                <td>{user.point_of_contact}</td>
-                                <td>{user.phone}</td>
-                                </>
-                            )
-                        } else {
                                 return (
-                                    <tr key={user.id}>
-                                        <td>{user.company_name}</td>
-                                        <td>{user.point_of_contact}</td>
-                                        <td>{user.phone}</td>
-                                    </tr>
+                                    <>
+                                    <td key={i}>{user.company_name}</td>
+                                    <td>{user.trade_type}</td>
+                                    <td>{user.point_of_contact}</td>
+                                    <td>{user.phone}</td>
+                                    </>
                                 )
+                            } else {
+                                    return (
+                                        <tr key={user.id}>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>{user.company_name}</td>
+                                            <td>{user.trade_type}</td>
+                                            <td>{user.point_of_contact}</td>
+                                            <td>{user.phone}</td>
+                                        </tr>
+                                    )
                             }
                         },
                         i++
@@ -75,6 +83,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                                     <th>Address</th>
                                     <th>Owner Info</th>
                                     <th>Sub Name</th>
+                                    <th>Trade</th>
                                     <th>Point of Contact</th>
                                     <th>Phone</th>
                                     <th>Complete by:</th>
@@ -86,6 +95,32 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
             )
         }
 
+        const handleProjCreate = (e) => {
+            e.preventDefault();
+            console.log(projTitle, projOwnerName)
+            fetch('/projects', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: projTitle,
+                    address: projAddress,
+                    owner_name: projOwnerName,
+                    complete_by: projCompBy,
+                })
+            })
+            .then((r) => r.json())
+            .then((data) => setSessionProjData(data))
+            setProjTitle("")
+            setProjAddress("")
+            setProjOwnerName("")
+            setProjCompBy()
+            setCreateProject(!createProject)
+        }
+
+        console.log(sessionProjData)
+
         const createProjectForm = () => {
             return (
                 <div>
@@ -93,7 +128,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                     <div align='right'>
                         <input type="button" value="Projects List" onClick={() => setCreateProject(false)}/> 
                     </div>
-                    <form>
+                    <form onSubmit={handleProjCreate}>
                     <input
                         type="text"
                         name="title"
@@ -112,7 +147,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                     <ul></ul>
                     <input
                         type="text"
-                        name="owner name"
+                        name="owner_name"
                         placeholder="Owner Name"
                         value={projOwnerName} 
                         onChange={(e) => setProjOwnerName(e.target.value)}
@@ -120,7 +155,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                     <ul></ul>
                     <input
                         type="date"
-                        name="complete by"
+                        name="complete_by"
                         placeholder="Complete By"
                         value={projCompBy} 
                         onChange={(e) => setProjCompBy(e.target.value)}
@@ -134,7 +169,10 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
 
         const viewToggle = () => {
             if (sessionUserData !== null && loginStatus === true) {
-                getProjects()
+                if (projSession === false) {
+                    getProjects()
+                    setProjSession(true)
+                }
                 if (createProject === false) {
                     return (
                         <div>
