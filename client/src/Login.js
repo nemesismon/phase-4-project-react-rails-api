@@ -31,9 +31,6 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
         setLoginStatus(true)
         setUsername("")
         setPassword("")
-        return (
-            <Navigate to='/' replace />
-        )
     }
 
     const handleUserCreate = (e) => {
@@ -95,11 +92,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                         <button type="submit">Submit</button>
                     </form>
                 </div>
-        )} else {
-            return (
-                <Navigate to='/userlist' replace />
-            )
-        }
+        )}
     }
 
     const createDisplay = () => {

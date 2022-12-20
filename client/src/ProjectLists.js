@@ -10,6 +10,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
     const [projOwnerName, setProjOwnerName] = useState("")
     const [projCompBy, setProjCompBy] = useState()
 
+    // GETs in APP only, also need to get this information from USER
     const getProjects = () => {
         fetch('/projects')
         .then((r) => r.json())
@@ -59,7 +60,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                         i++
                         )}
                         <td>{item.complete_by}</td>
-                        <button>Mark Complete</button>
+                        {/* <button>Mark Complete</button> */}
                     </tr>
                     </tbody>
                 )

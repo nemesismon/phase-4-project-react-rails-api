@@ -12,12 +12,12 @@ function NavBar({ loginStatus }) {
                         Home &ensp;
                 </NavLink>
                 <NavLink style={{textDecoration: 'none'}}
-                    to="/userlist">
-                        Punch List &ensp;
+                    to="/profile">
+                        Profile &ensp;
                 </NavLink>
                 <NavLink style={{textDecoration: 'none'}}
-                    to="/projectlist">
-                        Project List &ensp;
+                    to="/projects">
+                        Projects &ensp;
                 </NavLink>
                 <NavLink style={{textDecoration: 'none'}}
                     to="/login">
