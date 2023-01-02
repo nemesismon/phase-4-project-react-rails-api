@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   
-  resources :projects, except: :destroy
-  resources :punch_items
-  resources :users, except: :destroy
+  resources :projects, only: [:index, :create]
+  resources :punch_items, only: [:create, :show, :update, :destroy]
+  resources :users, only: [:create, :show]
 
   get '/me', to: 'sessions#show'
   post '/login', to: 'sessions#create'

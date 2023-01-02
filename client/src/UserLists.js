@@ -1,7 +1,10 @@
 import React, {useState} from 'react'
+import { useNavigate } from 'react-router-dom'
 import './UserLists.css'
 
 function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
+
+    console.log(sessionUserData)
 
     const [createPunchItem, setCreatePunchItem] = useState(false)
     const [itemUserID, setItemUserID] = useState(null)
@@ -10,14 +13,17 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
     const [itemArea, setItemArea] = useState("")
     const [itemNotes, setItemNotes] = useState("")
     const [itemCompBy, setItemCompBy] = useState(null)
-    const [editForm, setEditForm] = useState()
+    const [editForm, setEditForm] = useState(false)
     const [updateTask, setUpdateTask] = useState("")
     const [updateArea, setUpdateArea] = useState("")
     const [updateNotes, setUpdateNotes] = useState("")
     const [updateCompleteBy, setUpdateCompleteBy] = useState(null)
     const [itemID, setItemID] = useState()
+    // const navigate = useNavigate()
     
     const handleItemCreate = (e) => {
+        // update state accordingly
+        // address user assigning
         e.preventDefault();
         fetch('/punch_items', {
             method: 'POST',
@@ -35,7 +41,11 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                 }),
         })
         .then((r) => r.json())
-        .then((data) => setSessionUserData(data))
+        .then((data) => {
+            const items = sessionUserData.punch_items
+            const total = items.push(data)
+            setSessionUserData({...sessionUserData})
+        })
         setItemUserID()
         setItemProjID()
         setItemTask("")
@@ -44,18 +54,10 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
         setItemCompBy()
         setCreatePunchItem(false)
     }
-    
-    const handleCompleteItem = (e, item) => {
-        e.preventDefault();
-        fetch(`/punch_items/${item.id}`, {
-            method: 'DELETE',
-        })
-        .then((r) => r.json())
-        // Delete in state not from fetch
-        .then((data) => setSessionUserData(data))
-    }
+    // console.log(sessionUserData)
 
     const handleUpdateItem = (e, item) => {
+        // update state accordingly
         e.preventDefault();
         fetch(`/punch_items/${item.id}`, {
             method: 'PUT',
@@ -70,19 +72,33 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
             })  
         })
         .then((r) => r.json())
-        .then((data) => setSessionUserData(data))
-        setEditForm()
+        .then((data) => console.log(data))
+        setEditForm(false)
         setUpdateTask("")
         setUpdateArea("")
         setUpdateNotes("")
         setUpdateCompleteBy(null)
         setItemID()
     }
+    
+    const handleCompleteItem = (e, item) => {
+        console.log(item.id)
+        e.preventDefault();
+        fetch(`/punch_items/${item.id}`, {
+            method: 'DELETE',
+        })
+        for (let x = 0; x < sessionUserData.punch_items.length; x++) {
+            if (sessionUserData.punch_items[x].id === item.id) {
+                const newItems = sessionUserData.punch_items.splice(x, 1)
+            }
+            setSessionUserData({ ...sessionUserData} )
+        }
+    }
 
     const editSaveToggle = (item) => {
         setItemID(item.id)
         console.log(editForm)
-        if (editForm === undefined) {
+        if (editForm === false) {
             return (
                 <input type="button" value="Edit" onClick={() => setEditForm(true)}/>
             )
@@ -94,9 +110,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
     }
 
     const listPunchItems = () => {
-        console.log(sessionUserData)
-        const theList = sessionUserData.punch_items.map((item) => {
-            if (item.active === true) {
+         const theList = sessionUserData.punch_items.map((item) => {
                 if (item.id !== itemID) {
                 return (
                     <tr key={item.id}>
@@ -104,7 +118,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                         <td>{item.area}</td>
                         <td>{item.notes}</td>
                         <td>{item.complete_by}</td>
-                        <input type="button" value="Mark Complete" onClick={e => handleCompleteItem(e, item)}/>
+                        <input type="button" value="Complete" onClick={e => handleCompleteItem(e, item)}/>
                         {/* {editSaveToggle(item)} */}
                     </tr>
                 )} else {
@@ -114,32 +128,31 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                         <input type='text' name='area' placeholder={item.area} value={updateArea} onChance={e => setUpdateArea(e.target.value)} />
                         <input type='text' name='notes' placeholder={item.notes} value={updateNotes} onChange={e => setUpdateNotes(e.target.value)} />
                         <input type='date' name='complete by' placeholder={item.complete_by} value={updateCompleteBy} onChange={e => setUpdateCompleteBy(e.target.value)} />
-                        <input type="button" value="Mark Complete" onClick={e => handleCompleteItem(e, item)}/>
+                        <input type="button" value="Complete" onClick={e => handleCompleteItem(e, item)}/>
+                        {/* {editSaveToggle(item)} */}
                     </tr>
                     )
                 }
             }
-        }
         )
         console.log(theList)
         return theList
+    }
 
-        // if (theList.includes(undefined) || theList.includes(null)) {
-            // return (
-                // <h4>There are currently no puch items for this user!</h4>
-            // )
-        // } else {
-            
-        // }
+    const itemMessages = () => {
+        if (sessionUserData.punch_items.length === 0) {
+            return (<h4>There are currently no items to complete</h4>)
         }
+    }
     
-    const sessionCheck = () => {
+    const profileCheck = () => {
         if (loginStatus === false) {
             return (
                 <h4>Unauthorized - please login</h4>
             )
         } else if (sessionUserData === null && loginStatus === true) {
             return (
+                // redirect?
                 <h4>Loading...</h4>
             )
         } else if (sessionUserData !== null && loginStatus === true) {
@@ -161,6 +174,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                                 </tr>
                                     {listPunchItems()}
                             </table>
+                                {itemMessages()}
                         </div>
                 </div>
             )} else {
@@ -227,7 +241,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
 
     return (
         <div>
-            {sessionCheck()}
+            {profileCheck()}
         </div>
     )
 }

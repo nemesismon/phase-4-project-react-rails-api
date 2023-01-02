@@ -9,13 +9,6 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
     const [projAddress, setProjAddress] = useState("")
     const [projOwnerName, setProjOwnerName] = useState("")
     const [projCompBy, setProjCompBy] = useState()
-
-    // GETs in APP only, also need to get this information from USER
-    const getProjects = () => {
-        fetch('/projects')
-        .then((r) => r.json())
-        .then((data) => setSessionProjData(data))
-    }
     
     const projectsList = () => {
         if (sessionProjData === null && loginStatus === true) {
@@ -27,8 +20,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
             const projList = sessionProjData.map((item) => {
                 //Fix for duplicates
                 return (
-                    <tbody>
-                    <tr key={item.id}>
+                    <tr key={item.address}>
                         <td>{item.title}</td>
                         <td>{item.address}</td>
                         <td>{item.owner_name}</td>
@@ -36,25 +28,22 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                             //Option for no attached users
                             if (i <= 1) {
                                 return (
-                                    <>
-                                    <td key={i}>{user.company_name}</td>
-                                    <td>{user.trade_type}</td>
-                                    <td>{user.point_of_contact}</td>
-                                    <td>{user.phone}</td>
-                                    </>
+                                    <tr key={Math.round(Math.random()*1000000)}>
+                                        <td>{user.company_name}</td>
+                                        <td>{user.trade_type}</td>
+                                        <td>{user.point_of_contact}</td>
+                                        <td>{user.phone}</td>
+                                    </tr>
                                 )
                             } else {
-                                    return (
-                                        <tr key={user.id}>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>{user.company_name}</td>
-                                            <td>{user.trade_type}</td>
-                                            <td>{user.point_of_contact}</td>
-                                            <td>{user.phone}</td>
-                                        </tr>
-                                    )
+                                return (
+                                    <tr key={Math.round(Math.random()*1000000)}>
+                                        <td>{user.company_name}</td>
+                                        <td>{user.trade_type}</td>
+                                        <td>{user.point_of_contact}</td>
+                                        <td>{user.phone}</td>
+                                    </tr>
+                                )
                             }
                         },
                         i++
@@ -62,7 +51,6 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                         <td>{item.complete_by}</td>
                         {/* <button>Mark Complete</button> */}
                     </tr>
-                    </tbody>
                 )
             })
             return projList
@@ -79,6 +67,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                     <br></br>      
                     <div>
                         <table align='center'>
+                            <tbody>
                                 <tr>
                                     <th>Project Name</th>
                                     <th>Address</th>
@@ -90,6 +79,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                                     <th>Complete by:</th>
                                 </tr>
                             {projectsList()}
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -98,7 +88,6 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
 
         const handleProjCreate = (e) => {
             e.preventDefault();
-            console.log(projTitle, projOwnerName)
             fetch('/projects', {
                 method: 'POST',
                 headers: {
@@ -169,12 +158,11 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
         }
 
         const viewToggle = () => {
-            if (sessionUserData !== null && loginStatus === true) {
-                if (projSession === false) {
-                    getProjects()
+            if (projSession === false) {
+                if (projSession === false) {                    
                     setProjSession(true)
                 }
-                if (createProject === false) {
+                else if (createProject === false) {
                     return (
                         <div>
                             {punchList()}

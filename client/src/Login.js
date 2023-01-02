@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus, setSessionProjData}) {
 
@@ -13,6 +13,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
     const[phone, setPhone] = useState(0)
     const[email, setEmail] = useState("")
     const[loginCreate, setLoginCreate] = useState(true)
+    const navigate = useNavigate()
 
     const handleUserLogin = (e) => {
         e.preventDefault();
@@ -28,9 +29,10 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
         })
         .then((r) => r.json())
         .then((resp) => setSessionUserData(resp))
-        setLoginStatus(true)
-        setUsername("")
-        setPassword("")
+            setLoginStatus(true)
+            setUsername("")
+            setPassword("")
+            navigate('/profile')
     }
 
     const handleUserCreate = (e) => {
@@ -53,19 +55,17 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
             }),
         }) .then((res) => res.json())
            .then((data) => setSessionUserData(data))
-            setLoginStatus(true)
-            setUsername("")
-            setPassword("")
-            setPasswordConfirmation("")
-            setCompanyName("")
-            setAddress("")
-            setTradeType("")
-            setPoc("")
-            setPhone(0)
-            setEmail("")
-            return (
-                <Navigate to='/' replace />
-            )
+                setLoginStatus(true)
+                setUsername("")
+                setPassword("")
+                setPasswordConfirmation("")
+                setCompanyName("")
+                setAddress("")
+                setTradeType("")
+                setPoc("")
+                setPhone(0)
+                setEmail("")
+                navigate('/profile')
     }
 
     const loginDisplay = () => {
@@ -188,7 +188,8 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
 
     const toggleButton = () => setLoginCreate(!loginCreate)
 
-    const displayChanger = () => {
+    const execLogin = () => {
+        // refactor this train wreck
         if (loginStatus === false) {
             if (loginCreate === true) {
                 return (
@@ -223,7 +224,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
 
     return (
         <div>
-            {displayChanger()}
+            {execLogin()}
         </div>
     )
 }

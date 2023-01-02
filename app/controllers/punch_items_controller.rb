@@ -1,35 +1,40 @@
 class PunchItemsController < ApplicationController
 
-    def index
-        punchItems = PunchItem.all
-        if punchItems
-            render json: punchItems, status: :accepted
-        else
-            render json: {error: "No record found"}, status: :not_found
-        end
-    end
+    # check for existing session
+    # implement filters where applicable
 
     def create
         # collection method
-        item = PunchItem.create(user_id: params[:user_id], project_id: params[:project_id], task: params[:task], area: params[:area], notes: params[:notes], complete_by: params[:complete_by], active: params[:active])
-        if item
-            item.save
-            user = User.find_by(id: session[:user_id])
-            render json: user, status: :accepted
+        user = User.find_by(id: session[:user_id])
+        if user
+            item = user.punch_items.create(punch_item_params)
+            render json: item, status: :accepted
         else
             render json: {error: "Unprocessible"}, status: :unprocessible_entity
         end
     end
+
+    def show
+    end
+
+    def update
+    end
     
     def destroy
-        item = PunchItem.find_by(id: params[:id])
-        if item
-            item.update(active: false)
-            user = User.find_by(id: session[:user_id])
-            # render json: user, status: :accepted  
+        user = User.find_by(id: session[:user_id])
+        if user
+            item = PunchItem.find_by(id: params[:id])
+            item.delete
+            head :no_content
         else
             render json: {error: "Record not found"}, status: :not_found
         end
+    end
+
+    private
+    # Make strong params as universal as possible with regard to controller functions, less is more
+    def punch_item_params
+        params.permit(:project_id, :task, :area, :notes, :complete_by, :active)
     end
 
 end

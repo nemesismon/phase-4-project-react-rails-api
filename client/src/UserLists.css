@@ -1,6 +1,12 @@
 
-th, td {
+td {
     text-align: left;
-    /* min-width: 45px; */
-    /* max-width: 55px; */
+    min-width: 200px;
+    max-width: 200px;
   }
+
+th {
+  text-align: left;
+  min-width: auto;
+  max-width: auto;
+}

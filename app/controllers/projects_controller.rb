@@ -1,17 +1,27 @@
 class ProjectsController < ApplicationController
 
+    # check for existing session
+    # implement filters where applicable
+
     def index
-        projects = Project.all
-        if projects
-            render json: projects, status: :ok
-        else
-            render json: {error: "No record(s) found"}, status: :not_found
-        end
+        user = User.find_by(id: session[:user_id])
+                # needs to check user type, display all for General Contractor - subs only on their respective projects
+            if user
+                if user.trade_type == "General Contractor"
+                    display = Project.all
+                    render json: display, status: :ok
+                elsif user.trade_type != nil || undefined
+                    render json: user.projects, status: :ok
+                end
+            else
+                render json: {error: "Unauthorized"}, status: :unauthorized
+            end
     end
 
     def create
-        project = Project.new(create_params)
-        if project.valid?
+        user = User.find_by(id: session[:user_id])
+        project = Project.new(project_params)
+        if project.valid? && user
             project.save
             projects = Project.all
             render json: projects, status: :accepted
@@ -20,7 +30,9 @@ class ProjectsController < ApplicationController
         end
     end
 
-    def create_params
+    private
+
+    def project_params
         params.permit(:title, :address, :owner_name, :complete_by)
     end
 
