@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom'
 
 function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus, setSessionProjData}) {
 
-    const[username, setUsername] = useState("")
-    const[password, setPassword] = useState("")
-    const[passwordConfirmation, setPasswordConfirmation] = useState("")
-    const[companyName, setCompanyName] = useState("")
-    const[address, setAddress] = useState("")
-    const[tradeType, setTradeType] = useState("")
-    const[poc, setPoc] = useState("")
+    const[username, setUsername] = useState('')
+    const[password, setPassword] = useState('')
+    const[passwordConfirmation, setPasswordConfirmation] = useState('')
+    const[companyName, setCompanyName] = useState('')
+    const[address, setAddress] = useState('')
+    const[tradeType, setTradeType] = useState('')
+    const[poc, setPoc] = useState('')
     const[phone, setPhone] = useState(0)
-    const[email, setEmail] = useState("")
+    const[email, setEmail] = useState('')
     const[loginCreate, setLoginCreate] = useState(true)
     const navigate = useNavigate()
 
@@ -30,8 +30,8 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
         .then((r) => r.json())
         .then((resp) => setSessionUserData(resp))
             setLoginStatus(true)
-            setUsername("")
-            setPassword("")
+            setUsername('')
+            setPassword('')
             navigate('/profile')
     }
 
@@ -56,15 +56,15 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
         }) .then((res) => res.json())
            .then((data) => setSessionUserData(data))
                 setLoginStatus(true)
-                setUsername("")
-                setPassword("")
-                setPasswordConfirmation("")
-                setCompanyName("")
-                setAddress("")
-                setTradeType("")
-                setPoc("")
+                setUsername('')
+                setPassword('')
+                setPasswordConfirmation('')
+                setCompanyName('')
+                setAddress('')
+                setTradeType('')
+                setPoc('')
                 setPhone(0)
-                setEmail("")
+                setEmail('')
                 navigate('/profile')
     }
 
@@ -74,22 +74,22 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                 <div>
                     <form onSubmit={handleUserLogin}>
                         <input
-                            type="text"
-                            name="username"
-                            placeholder="Username"
+                            type='text'
+                            name='username'
+                            placeholder='Username'
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                         />
                         <ul></ul>
                         <input
-                            type="text"
-                            name="password"
-                            placeholder="Password"
+                            type='text'
+                            name='password'
+                            placeholder='Password'
                             value={password} 
                             onChange={(e) => setPassword(e.target.value)}
                         />
                         <ul></ul>
-                        <button type="submit">Submit</button>
+                        <button type='submit'>Submit</button>
                     </form>
                 </div>
         )}
@@ -100,78 +100,78 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
             <div>
                 <form onSubmit={handleUserCreate}>
                     <input
-                        type="text"
-                        name="username"
-                        placeholder="Username"
+                        type='text'
+                        name='username'
+                        placeholder='Username'
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
                     <ul></ul>
                     <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
+                        type='password'
+                        name='password'
+                        placeholder='Password'
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <ul></ul>
                     <input
-                        type="password"
-                        name="password_confirmation"
-                        placeholder="Password Confirmation"
+                        type='password'
+                        name='password_confirmation'
+                        placeholder='Password Confirmation'
                         value={passwordConfirmation} 
                         onChange={(e) => setPasswordConfirmation(e.target.value)}
                     />
                     <ul></ul>
                     <input
-                        type="text"
-                        name="company_name"
-                        placeholder="Company Name"
+                        type='text'
+                        name='company_name'
+                        placeholder='Company Name'
                         value={companyName} 
                         onChange={(e) => setCompanyName(e.target.value)}
                     />
                     <ul></ul>
                     <input
-                        type="text"
-                        name="address"
-                        placeholder="Address"
+                        type='text'
+                        name='address'
+                        placeholder='Address'
                         value={address} 
                         onChange={(e) => setAddress(e.target.value)}
                     />
                     <ul></ul>
                     <input
-                        type="text"
-                        name="trade_type"
-                        placeholder="Trade Type"
+                        type='text'
+                        name='trade_type'
+                        placeholder='Trade Type'
                         value={tradeType} 
                         onChange={(e) => setTradeType(e.target.value)}
                     />
                     <ul></ul>
                     <input
-                        type="text"
-                        name="point_of_contact"
-                        placeholder="Point of Contact"
+                        type='text'
+                        name='point_of_contact'
+                        placeholder='Point of Contact'
                         value={poc} 
                         onChange={(e) => setPoc(e.target.value)}
                     />
                     <ul></ul>
                     <input
-                        type="number"
-                        name="phone"
-                        placeholder="Phone Number"
+                        type='number'
+                        name='phone'
+                        placeholder='Phone Number'
                         value={phone} 
                         onChange={(e) => setPhone(e.target.value)}
                     />
                     <ul></ul>
                     <input
-                        type="text"
-                        name="email"
-                        placeholder="Email"
+                        type='text'
+                        name='email'
+                        placeholder='Email'
                         value={email} 
                         onChange={(e) => setEmail(e.target.value)}
                     />
                     <ul></ul>
-                    <button type="submit">Submit</button>
+                    <button type='submit'>Submit</button>
                 </form>
             </div>
         )
@@ -189,13 +189,12 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
     const toggleButton = () => setLoginCreate(!loginCreate)
 
     const execLogin = () => {
-        // refactor this train wreck
         if (loginStatus === false) {
             if (loginCreate === true) {
                 return (
                     <>
                         <h1>Login</h1>
-                        <button onClick={() => toggleButton()}>{loginCreate ? "Signup" : "Login"}</button>
+                        <button onClick={() => toggleButton()}>{loginCreate ? 'Signup' : 'Login'}</button>
                         <br></br>
                         {loginDisplay()}
                     </>
@@ -205,7 +204,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                     <>
                         <h1>Create Account</h1>
                         {/* Redundent?? */}
-                        <button onClick={() => toggleButton()}>{loginCreate ? "Signup" : "Login"}</button>
+                        <button onClick={() => toggleButton()}>{loginCreate ? 'Signup' : 'Login'}</button>
                         <br></br>
                         {createDisplay()}
                     </>

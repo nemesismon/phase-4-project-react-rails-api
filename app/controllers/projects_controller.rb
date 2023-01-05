@@ -8,9 +8,10 @@ class ProjectsController < ApplicationController
                 # needs to check user type, display all for General Contractor - subs only on their respective projects
             if user
                 if user.trade_type == "General Contractor"
-                    display = Project.all
-                    render json: display, status: :ok
-                elsif user.trade_type != nil || undefined
+                    # iterate over the projects and then the users to filter
+                    projects = Project.all
+                    render json: projects, status: :ok
+                else
                     render json: user.projects, status: :ok
                 end
             else

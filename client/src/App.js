@@ -5,7 +5,7 @@ import Login from './Login'
 import UserLists from './UserLists'
 import ProjectLists from './ProjectLists'
 import NavBar from './NavBar'
-import {Routes, Route, useNavigate} from "react-router-dom"
+import {Routes, Route, useNavigate} from 'react-router-dom'
 
 function App() {
 
@@ -14,14 +14,14 @@ function App() {
     // AR needs to do as much work as possible!
   // Each back end process needs to check valid user session
   // Double check that all state is changed through FE not via response from server
+  // hub for state to drive components - one time GET fetches in APP, in component only for specialized requests
+
 
   const [sessionUserData, setSessionUserData] = useState(null)
   const [sessionProjData, setSessionProjData] = useState(null)
   const [loginStatus, setLoginStatus] = useState(false)
+  const [projectsGet, setProjectsGet] = useState(false)
   const navigate = useNavigate()
-  
-    // get initial state - (all GET fetches here and one time)
-    // hub for state to drive components - one time GET fetches in APP, in component only for specialized requests
 
     useEffect(() => {
       fetch('/me')
@@ -40,33 +40,37 @@ function App() {
       setLoginStatus(true)
     }, [])
 
-    useEffect(() => {
+    if (projectsGet === false) {
       fetch('/projects')
       .then((r) => {
           if (r.ok) {
             return r.json()
         }
         throw new Error('Unauthorized')})
-      .then((data) => setSessionProjData(data))
-      .catch((error) => setSessionProjData(null))
-    }, [])
+      .then((data) => {
+        setSessionProjData(data)
+        setProjectsGet(true)
+      })
+      .catch((error) => {
+        setSessionProjData(null)
+      })}
 
-    // console.log(sessionUserData)
-    // console.log(sessionProjData)
+  console.log(sessionUserData)
+  console.log(sessionProjData)
 
   const execApp = () => {
         return (
-          <div className="App">
+          <div className='App'>
             <header>
               Welcome to Builder Exchange
             </header>
               <div>
                   <NavBar loginStatus={loginStatus} />
                     <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/profile" element={<UserLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus}/>} />
-                      <Route path="/projects" element={<ProjectLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData} />} />
-                      <Route path="/login" element={<Login sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} setLoginStatus={setLoginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData}/>} />
+                      <Route path='/' element={<Home />} />
+                      <Route path='/profile' element={<UserLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus}/>} />
+                      <Route path='/projects' element={<ProjectLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData} />} />
+                      <Route path='/login' element={<Login sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} setLoginStatus={setLoginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData}/>} />
                     </Routes>
               </div>
           </div>

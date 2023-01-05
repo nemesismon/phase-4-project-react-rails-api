@@ -8,19 +8,19 @@ function NavBar({ loginStatus }) {
             <br></br>
             <b>
                 <NavLink style={{textDecoration: 'none'}}
-                    to="/">
+                    to='/'>
                         Home &ensp;
                 </NavLink>
                 <NavLink style={{textDecoration: 'none'}}
-                    to="/profile">
+                    to='/profile'>
                         Profile &ensp;
                 </NavLink>
                 <NavLink style={{textDecoration: 'none'}}
-                    to="/projects">
+                    to='/projects'>
                         Projects &ensp;
                 </NavLink>
                 <NavLink style={{textDecoration: 'none'}}
-                    to="/login">
+                    to='/login'>
                         {loginStatus ? 'Logout' : 'Login'} &ensp;
                 </NavLink>
             </b>
