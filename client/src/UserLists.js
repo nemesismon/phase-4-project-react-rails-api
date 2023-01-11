@@ -4,8 +4,6 @@ import './UserLists.css'
 
 function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
 
-    console.log(sessionUserData)
-
     const [createPunchItem, setCreatePunchItem] = useState(false)
     const [itemUserID, setItemUserID] = useState(null)
     const [itemProjID, setItemProjID] = useState(null)
@@ -15,7 +13,13 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
     const [itemCompBy, setItemCompBy] = useState(null)
     
     const handleItemCreate = (e) => {
-        // address user assigning
+        // only users can see their own
+
+        if (itemUserID || itemProjID || itemTask || itemArea || itemNotes || itemCompBy === null || undefined) {
+            setCreatePunchItem(false)
+            return
+        }
+
         e.preventDefault();
         fetch('/punch_items', {
             method: 'POST',
@@ -32,11 +36,17 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                     active: true,
                 }),
         })
-        .then((r) => r.json())
+        .then((r) => {
+            if (r.ok) {
+            return r.json()
+            }
+            throw new Error('Unable to create punch item')
+        })
         .then((data) => {
             sessionUserData.punch_items.push(data)
             setSessionUserData({ ...sessionUserData })
         })
+        .catch((error) => error)
         setItemUserID()
         setItemProjID()
         setItemTask('')
@@ -60,13 +70,11 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
     }
 
     const listPunchItems = () => {
-         const punchList = sessionUserData.punch_items.map((item) => {
+         return sessionUserData.punch_items.map((item) => {
             return (
                 <EditForm item={item} handleCompleteItem={handleCompleteItem} sessionUserData={sessionUserData} setSessionUserData={setSessionUserData}/>
             )
-            }
-        )
-        return punchList
+         })
     }
 
     const itemMessages = () => {
@@ -101,7 +109,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                                     <th>Notes</th>
                                     <th>Complete by:</th>
                                 </tr>
-                                {console.log(sessionUserData)}
+                                {/* {console.log(sessionUserData)} */}
                                     {listPunchItems()}
                             </table>
                                 {itemMessages()}

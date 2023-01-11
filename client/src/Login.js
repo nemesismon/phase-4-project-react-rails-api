@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus, setSessionProjData}) {
+function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus, setSessionProjData, handleGetProjects}) {
 
     const[username, setUsername] = useState('')
     const[password, setPassword] = useState('')
@@ -15,6 +15,8 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
     const[loginCreate, setLoginCreate] = useState(true)
     const navigate = useNavigate()
 
+    // login and signup work and with incorrect data -> fetch errors setup
+
     const handleUserLogin = (e) => {
         e.preventDefault();
         fetch('/login', {
@@ -27,16 +29,37 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                 password: password
             }),
         })
-        .then((r) => r.json())
-        .then((resp) => setSessionUserData(resp))
+        .then((r) => 
+            {if (r.ok) {
+                return r.json()
+            }
+            throw new Error('Incorrect username or password')
+        })
+        .then((resp) => {
+            setSessionUserData(resp)
             setLoginStatus(true)
+            setSessionProjData(handleGetProjects())
             setUsername('')
             setPassword('')
             navigate('/profile')
-    }
+        })
+        .catch((error) => {
+            console.log(error)
+            setSessionUserData(null)
+            setLoginStatus(false)
+            setUsername('')
+            setPassword('')
+        })
+    } 
 
     const handleUserCreate = (e) => {
         e.preventDefault();
+
+        if (username || password || passwordConfirmation || companyName || address || tradeType || poc || email === '') {
+            setLoginCreate(true)
+            return
+        }
+
         fetch('/users', {
             method: 'POST',
             headers: {
@@ -53,9 +76,19 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                 phone: phone,
                 email: email
             }),
-        }) .then((res) => res.json())
-           .then((data) => setSessionUserData(data))
+        })  .then((res) => {
+                if (res.ok) {
+                    return res.json()
+                }
+                throw new Error('Insufficient or incorrect data')
+            })
+            .then((data) => setSessionUserData(data))
                 setLoginStatus(true)
+                navigate('/profile')
+            .catch((error) => {
+                console.log(error)
+                setLoginStatus(false)
+            })
                 setUsername('')
                 setPassword('')
                 setPasswordConfirmation('')
@@ -65,7 +98,6 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                 setPoc('')
                 setPhone(0)
                 setEmail('')
-                navigate('/profile')
     }
 
     const loginDisplay = () => {
@@ -181,9 +213,9 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
         fetch('/logout', {
             method: 'DELETE',
         })
-        setSessionUserData(null)
-        setSessionProjData(null)
-        setLoginStatus(false)
+            setSessionUserData(null)
+            setSessionProjData(null)
+            setLoginStatus(false)
     }
 
     const toggleButton = () => setLoginCreate(!loginCreate)

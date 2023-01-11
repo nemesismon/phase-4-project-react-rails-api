@@ -4,23 +4,28 @@ import './UserLists.css'
 function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessionProjData }) {
 
     const [createProject, setCreateProject] = useState(false)
-    const [projTitle, setProjTitle] = useState("")
-    const [projAddress, setProjAddress] = useState("")
-    const [projOwnerName, setProjOwnerName] = useState("")
+    const [projTitle, setProjTitle] = useState('')
+    const [projAddress, setProjAddress] = useState('')
+    const [projOwnerName, setProjOwnerName] = useState('')
     const [projCompBy, setProjCompBy] = useState()
 
-    console.log(sessionProjData)
-    
-    const projects = () => {
+    // if (sessionUserData !== null) {
+    //     setSessionProjData(sessionUserData.punch_items)
+    // }
+    // debugger
+
+    const projectsList = () => {
         if (sessionUserData === null) {
-            
+            return (
+                <p>Please login</p>
+            )            
         } else if (sessionProjData === null && loginStatus === true) {
             return (
                 <p>Loading...</p>
             )
         } else if (sessionProjData !== null && loginStatus === true) {
-            const projList = sessionProjData.map((project) => {
-                //Fix for duplicates
+            // debugger
+            return sessionProjData.map((project) => {
                 //Option for no attached users
                 return (
                     <tr key={project.address}>
@@ -43,7 +48,6 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                     </tr>
                 )
             })
-            return projList
         }
     }
 
@@ -52,7 +56,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                 <div>
                     <h1>Project List</h1>
                     <div align='right'>
-                        <input type="button" value="Create Project" onClick={() => setCreateProject(true)}/> 
+                        <input type='button' value='Create Project' onClick={() => setCreateProject(true)}/> 
                     </div>
                     <br></br>      
                     <div>
@@ -68,7 +72,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                                     <th>Phone</th>
                                     <th>Complete by:</th>
                                 </tr>
-                            {projects()}
+                            {projectsList()}
                             </tbody>
                         </table>
                     </div>
@@ -77,6 +81,12 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
         }
 
         const handleProjCreate = (e) => {
+
+            if (projTitle || projAddress || projOwnerName || projCompBy === null || undefined) {
+                setCreateProject(false)
+                return
+            }
+
             e.preventDefault();
             fetch('/projects', {
                 method: 'POST',
@@ -90,11 +100,17 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                     complete_by: projCompBy,
                 })
             })
-            .then((r) => r.json())
+            .then((r) => {
+                if (r.ok) {
+                    return(r.json())
+                }
+                throw new Error('Unable to create project')
+            })
             .then((data) => setSessionProjData(data))
-            setProjTitle("")
-            setProjAddress("")
-            setProjOwnerName("")
+            .catch((error) => error)
+            setProjTitle('')
+            setProjAddress('')
+            setProjOwnerName('')
             setProjCompBy()
             setCreateProject(false)
         }
@@ -104,42 +120,42 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                 <div>
                     <h1>Add New Project</h1>
                     <div align='right'>
-                        <input type="button" value="Projects List" onClick={() => setCreateProject(true)}/> 
+                        <input type='button' value='Projects List' onClick={() => setCreateProject(true)}/> 
                     </div>
                     <form onSubmit={handleProjCreate}>
                     <input
-                        type="text"
-                        name="title"
-                        placeholder="Title"
+                        type='text'
+                        name='title'
+                        placeholder='Title'
                         value={projTitle}
                         onChange={(e) => setProjTitle(e.target.value)}
                     />
                     <ul></ul>
                     <input
-                        type="text"
-                        name="address"
-                        placeholder="Address"
+                        type='text'
+                        name='address'
+                        placeholder='Address'
                         value={projAddress} 
                         onChange={(e) => setProjAddress(e.target.value)}
                     />
                     <ul></ul>
                     <input
-                        type="text"
-                        name="owner_name"
-                        placeholder="Owner Name"
+                        type='text'
+                        name='owner_name'
+                        placeholder='Owner Name'
                         value={projOwnerName} 
                         onChange={(e) => setProjOwnerName(e.target.value)}
                     />
                     <ul></ul>
                     <input
-                        type="date"
-                        name="complete_by"
-                        placeholder="Complete By"
+                        type='date'
+                        name='complete_by'
+                        placeholder='Complete By'
                         value={projCompBy} 
                         onChange={(e) => setProjCompBy(e.target.value)}
                     />
                     <ul></ul>
-                    <button type="submit">Submit</button>
+                    <button type='submit'>Submit</button>
                 </form>
                 </div>
             )

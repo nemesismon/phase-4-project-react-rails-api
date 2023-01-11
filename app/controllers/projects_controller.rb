@@ -20,6 +20,7 @@ class ProjectsController < ApplicationController
     end
 
     def create
+        # conditions for GC versus Sub
         user = User.find_by(id: session[:user_id])
         project = Project.new(project_params)
         if project.valid? && user
