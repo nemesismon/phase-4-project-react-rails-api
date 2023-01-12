@@ -15,8 +15,6 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
     const[loginCreate, setLoginCreate] = useState(true)
     const navigate = useNavigate()
 
-    // login and signup work and with incorrect data -> fetch errors setup
-
     const handleUserLogin = (e) => {
         e.preventDefault();
         fetch('/login', {
@@ -33,8 +31,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
             {if (r.ok) {
                 return r.json()
             }
-            throw new Error('Incorrect username or password')
-        })
+            throw new Error('Incorrect username or password')})
         .then((resp) => {
             setSessionUserData(resp)
             setLoginStatus(true)
@@ -44,7 +41,6 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
             navigate('/profile')
         })
         .catch((error) => {
-            console.log(error)
             setSessionUserData(null)
             setLoginStatus(false)
             setUsername('')
@@ -76,17 +72,15 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                 phone: phone,
                 email: email
             }),
-        })  .then((res) => {
-                if (res.ok) {
-                    return res.json()
+        })  .then((r) => {
+                if (r.ok) {
+                    return r.json()
                 }
-                throw new Error('Insufficient or incorrect data')
-            })
+                throw new Error('Insufficient or incorrect data')})
             .then((data) => setSessionUserData(data))
                 setLoginStatus(true)
                 navigate('/profile')
             .catch((error) => {
-                console.log(error)
                 setLoginStatus(false)
             })
                 setUsername('')
@@ -235,7 +229,6 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                 return (
                     <>
                         <h1>Create Account</h1>
-                        {/* Redundent?? */}
                         <button onClick={() => toggleButton()}>{loginCreate ? 'Signup' : 'Login'}</button>
                         <br></br>
                         {createDisplay()}

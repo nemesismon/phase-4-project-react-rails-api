@@ -1,8 +1,5 @@
 class SessionsController < ApplicationController
 
-    # check for existing session
-    # implement filters where applicable
-
     def create
         user = User.find_by(username: params[:username])
         if user&.authenticate(params[:password])
@@ -22,7 +19,6 @@ class SessionsController < ApplicationController
         end
     end
 
-    # Has to delete from database for realsies
     def destroy
         user = User.find_by(id: session[:user_id])
         if user

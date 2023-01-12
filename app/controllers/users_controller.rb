@@ -1,8 +1,5 @@
 class UsersController < ApplicationController
 
-    # check for existing session
-    # implement filters where applicable
-
     def create
         user = User.new(create_params)
         if user.valid?

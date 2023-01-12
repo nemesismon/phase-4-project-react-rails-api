@@ -5,7 +5,6 @@ import './UserLists.css'
 function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
 
     const [createPunchItem, setCreatePunchItem] = useState(false)
-    const [itemUserID, setItemUserID] = useState(null)
     const [itemProjID, setItemProjID] = useState(null)
     const [itemTask, setItemTask] = useState('')
     const [itemArea, setItemArea] = useState('')
@@ -13,21 +12,26 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
     const [itemCompBy, setItemCompBy] = useState(null)
     
     const handleItemCreate = (e) => {
-        // only users can see their own
-
-        if (itemUserID || itemProjID || itemTask || itemArea || itemNotes || itemCompBy === null || undefined) {
-            setCreatePunchItem(false)
-            return
-        }
-
         e.preventDefault();
+
+        // if (itemTask || itemArea || itemNotes === '' || itemCompBy === null) {
+        //     setCreatePunchItem(false)
+        //     setItemUserID(null)
+        //     setItemProjID(null)
+        //     setItemTask('')
+        //     setItemArea('')
+        //     setItemNotes('')
+        //     setItemCompBy(null)
+        //     return
+        // }
+
         fetch('/punch_items', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
             },
             body: JSON.stringify({
-                    user_id: itemUserID,
+                    // user_id: itemUserID,
                     project_id: itemProjID,
                     task: itemTask,
                     area: itemArea,
@@ -40,14 +44,12 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
             if (r.ok) {
             return r.json()
             }
-            throw new Error('Unable to create punch item')
-        })
+            throw new Error('Unable to create punch item')})
         .then((data) => {
             sessionUserData.punch_items.push(data)
             setSessionUserData({ ...sessionUserData })
         })
         .catch((error) => error)
-        setItemUserID()
         setItemProjID()
         setItemTask('')
         setItemArea('')
@@ -57,7 +59,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
     }
     
     const handleCompleteItem = (e, item) => {
-        e.preventDefault();
+        // e.preventDefault();
         fetch(`/punch_items/${item.id}`, {
             method: 'DELETE',
         })
@@ -72,7 +74,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
     const listPunchItems = () => {
          return sessionUserData.punch_items.map((item) => {
             return (
-                <EditForm item={item} handleCompleteItem={handleCompleteItem} sessionUserData={sessionUserData} setSessionUserData={setSessionUserData}/>
+                <EditForm item={item} handleCompleteItem={e => handleCompleteItem(e, item)} sessionUserData={sessionUserData} setSessionUserData={setSessionUserData}/>
             )
          })
     }
@@ -109,7 +111,6 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                                     <th>Notes</th>
                                     <th>Complete by:</th>
                                 </tr>
-                                {/* {console.log(sessionUserData)} */}
                                     {listPunchItems()}
                             </table>
                                 {itemMessages()}
@@ -123,14 +124,6 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                             <input type='button' value='Back to Punch List' onClick={() => setCreatePunchItem(false)}/> 
                         </div>
                         <form onSubmit={handleItemCreate}>
-                        <input
-                                type='text'
-                                name='user_id'
-                                placeholder='Company Name (user_id)'
-                                value={itemUserID}
-                                onChange={(e) => setItemUserID(e.target.value)}
-                            />
-                            <ul></ul>
                             <input
                                 type='text'
                                 name='project_id'

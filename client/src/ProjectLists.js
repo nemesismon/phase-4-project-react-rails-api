@@ -7,12 +7,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
     const [projTitle, setProjTitle] = useState('')
     const [projAddress, setProjAddress] = useState('')
     const [projOwnerName, setProjOwnerName] = useState('')
-    const [projCompBy, setProjCompBy] = useState()
-
-    // if (sessionUserData !== null) {
-    //     setSessionProjData(sessionUserData.punch_items)
-    // }
-    // debugger
+    const [projCompBy, setProjCompBy] = useState(null)
 
     const projectsList = () => {
         if (sessionUserData === null) {
@@ -24,17 +19,13 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                 <p>Loading...</p>
             )
         } else if (sessionProjData !== null && loginStatus === true) {
-            // debugger
             return sessionProjData.map((project) => {
-                //Option for no attached users
                 return (
                     <tr key={project.address}>
                         <td>{project.title}</td>
                         <td>{project.address}</td>
                         <td>{project.owner_name}</td>
                         {project.users.map((user) => {
-                            // if (i <= 1) {
-                                // debugger
                                 return (
                                     <tr key={Math.round(Math.random()*1000000)}>
                                         <td>{user.company_name}</td>
@@ -43,8 +34,6 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                                         <td>{user.phone}</td>
                                     </tr>
                         )})}
-                        <td>{project.complete_by}</td>
-                        {/* <button>Mark Complete</button> */}
                     </tr>
                 )
             })
@@ -67,10 +56,6 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                                     <th>Address</th>
                                     <th>Owner Info</th>
                                     <th>Sub Name</th>
-                                    <th>Trade</th>
-                                    <th>Point of Contact</th>
-                                    <th>Phone</th>
-                                    <th>Complete by:</th>
                                 </tr>
                             {projectsList()}
                             </tbody>
@@ -81,13 +66,16 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
         }
 
         const handleProjCreate = (e) => {
+            e.preventDefault()
 
-            if (projTitle || projAddress || projOwnerName || projCompBy === null || undefined) {
-                setCreateProject(false)
-                return
-            }
+            // if (projTitle || projAddress || projOwnerName === '' || projCompBy === null) {
+            //     setProjTitle('')
+            //     setProjAddress('')
+            //     setProjOwnerName('')
+            //     setCreateProject(false)
+            //     return
+            // }
 
-            e.preventDefault();
             fetch('/projects', {
                 method: 'POST',
                 headers: {
@@ -104,8 +92,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                 if (r.ok) {
                     return(r.json())
                 }
-                throw new Error('Unable to create project')
-            })
+                throw new Error('Unable to create project')})
             .then((data) => setSessionProjData(data))
             .catch((error) => error)
             setProjTitle('')

@@ -8,11 +8,9 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
     const [updateNotes, setUpdateNotes] = useState('')
     const [updateCompleteBy, setUpdateCompleteBy] = useState()
 
-    console.log(item)
-
     const handleUpdateItem = (e) => {
         e.preventDefault();
-        console.log(updateTask, updateArea, updateNotes)
+
         if (updateTask || updateArea || updateNotes === '' ) {
             setEditItem(false)
         }
@@ -29,14 +27,15 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
                 complete_by: updateCompleteBy
             })  
         })
-        .then((r) => r.json())
+        .then((r) => {
+            if (r.ok) {
+                return r.json()
+            }
+            throw new Error('Insufficient or inccorect data')})
         .then((data) => {
             if (data.status === 500) {
                 setEditItem(false)
             } else {
-                // check it's return and what to do here to update state
-                console.log(data)
-                // setEditItem(false)
                 item.task = data.task === "" ? item.task : data.task
                 item.area = data.area === "" ? item.area : data.area
                 item.notes = data.notes === "" ? item.notes : data.notes
@@ -49,6 +48,7 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
             setUpdateCompleteBy()
             setEditItem(false)
         })
+        .catch((error) => (error))
     }
 
     const execForm = () => {
@@ -65,15 +65,13 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
         )
     } else if (item !== null && editItem === true){
             return ( 
+                
             <tr key={item.id}>
-                {/* <form onSubmit={handleUpdateItem}> */}
                     <input type='text' name='task' placeholder={item.task} value={updateTask} onChange={e => {setUpdateTask(e.target.value)}} />
                     <input type='text' name='area' placeholder={item.area} value={updateArea} onChange={e => {setUpdateArea(e.target.value)}} />
                     <input type='text' name='notes' placeholder={item.notes} value={updateNotes} onChange={e => {setUpdateNotes(e.target.value)}} />
                     <input type='date' name='complete by' placeholder={item.complete_by} value={updateCompleteBy} onChange={e => {setUpdateCompleteBy(e.target.value)}} />
-                    {/* <input type='button' value='Complete' onClick={(e) => handleCompleteItem(e)}/> */}
                     <input type='button' value='Edit' onClick={e => handleUpdateItem(e, item)} />
-                {/* </form> */}
             </tr>
             )
     }}
