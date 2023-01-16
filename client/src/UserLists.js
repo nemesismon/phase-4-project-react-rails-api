@@ -10,20 +10,12 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
     const [itemArea, setItemArea] = useState('')
     const [itemNotes, setItemNotes] = useState('')
     const [itemCompBy, setItemCompBy] = useState(null)
-    
+    const [itemErrors, setItemErrors] = useState()
+    const [editErrors, setEditErrors] = useState()
+
+     
     const handleItemCreate = (e) => {
         e.preventDefault();
-
-        // if (itemTask || itemArea || itemNotes === '' || itemCompBy === null) {
-        //     setCreatePunchItem(false)
-        //     setItemUserID(null)
-        //     setItemProjID(null)
-        //     setItemTask('')
-        //     setItemArea('')
-        //     setItemNotes('')
-        //     setItemCompBy(null)
-        //     return
-        // }
 
         fetch('/punch_items', {
             method: 'POST',
@@ -31,7 +23,6 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                 'Content-type': 'application/json',
             },
             body: JSON.stringify({
-                    // user_id: itemUserID,
                     project_id: itemProjID,
                     task: itemTask,
                     area: itemArea,
@@ -42,14 +33,16 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
         })
         .then((r) => {
             if (r.ok) {
-            return r.json()
+                return r.json().then((respData) => {
+                    sessionUserData.punch_items.push(respData)
+                    setSessionUserData({ ...sessionUserData })
+                })
+            } else {
+                return r.json().then((errorData) => {
+                    setItemErrors(errorData)
+                })
             }
-            throw new Error('Unable to create punch item')})
-        .then((data) => {
-            sessionUserData.punch_items.push(data)
-            setSessionUserData({ ...sessionUserData })
         })
-        .catch((error) => error)
         setItemProjID()
         setItemTask('')
         setItemArea('')
@@ -58,8 +51,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
         setCreatePunchItem(false)
     }
     
-    const handleCompleteItem = (e, item) => {
-        // e.preventDefault();
+    const handleCompleteItem = (item) => {
         fetch(`/punch_items/${item.id}`, {
             method: 'DELETE',
         })
@@ -74,7 +66,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
     const listPunchItems = () => {
          return sessionUserData.punch_items.map((item) => {
             return (
-                <EditForm item={item} handleCompleteItem={e => handleCompleteItem(e, item)} sessionUserData={sessionUserData} setSessionUserData={setSessionUserData}/>
+                <EditForm item={item} handleCompleteItem={handleCompleteItem} sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} setEditErrors={setEditErrors}/>
             )
          })
     }
@@ -95,6 +87,8 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                 <h4>Loading...</h4>
             )
         } else if (sessionUserData !== null && loginStatus === true) {
+            const showEditErrors = editErrors ? editErrors.error : null
+            const showItemErrors = itemErrors ? itemErrors.error : null
             if (createPunchItem === false) {
             return (
                 <div>
@@ -104,6 +98,8 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                                 <input type='button' value='Create Punch Item' onClick={() => setCreatePunchItem(true)}/> 
                             </div>
                         <div>
+                        <><h5>{showItemErrors}</h5></>
+                        <><h5>{showEditErrors}</h5></>
                             <table align='center'>
                                 <tr>
                                     <th>Task</th>
@@ -123,6 +119,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                         <div align='right'>
                             <input type='button' value='Back to Punch List' onClick={() => setCreatePunchItem(false)}/> 
                         </div>
+                        <h5><b>* All fields required</b></h5>
                         <form onSubmit={handleItemCreate}>
                             <input
                                 type='text'

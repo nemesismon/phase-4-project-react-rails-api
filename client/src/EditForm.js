@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserData}) {
+function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserData, setEditErrors}) {
 
     const [editItem, setEditItem] = useState(false)
     const [updateTask, setUpdateTask] = useState('')
@@ -10,10 +10,6 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
 
     const handleUpdateItem = (e) => {
         e.preventDefault();
-
-        if (updateTask || updateArea || updateNotes === '' ) {
-            setEditItem(false)
-        }
 
         fetch(`/punch_items/${item.id}`, {
             method: 'PATCH',
@@ -29,27 +25,25 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
         })
         .then((r) => {
             if (r.ok) {
-                return r.json()
-            }
-            throw new Error('Insufficient or inccorect data')})
-        .then((data) => {
-            if (data.status === 500) {
-                setEditItem(false)
+                return r.json().then((respData) => {
+                    item.task = respData.task ? respData.task : item.task
+                    item.area = respData.area ? respData.area : item.area
+                    item.notes = respData.notes ? respData.notes : item.notes
+                    item.complete_by = respData.complete_by ? respData.complete_by : item.complete_by
+                    setSessionUserData({ ...sessionUserData })
+                    setEditItem(false)
+                })
             } else {
-                item.task = data.task === "" ? item.task : data.task
-                item.area = data.area === "" ? item.area : data.area
-                item.notes = data.notes === "" ? item.notes : data.notes
-                item.complete_by = data.complete_by === "" ? item.complete_by : data.complete_by
-                setSessionUserData({ ...sessionUserData })
+                return r.json().then((errorData) => {
+                    setEditErrors(errorData)
+                    setUpdateTask('')
+                    setUpdateArea('')
+                    setUpdateNotes('')
+                    setUpdateCompleteBy()
+                    setEditItem(false)        
+                })
             }
-            setUpdateTask('')
-            setUpdateArea('')
-            setUpdateNotes('')
-            setUpdateCompleteBy()
-            setEditItem(false)
-        })
-        .catch((error) => (error))
-    }
+    })}
 
     const execForm = () => {
     if (editItem === false) {
@@ -65,13 +59,12 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
         )
     } else if (item !== null && editItem === true){
             return ( 
-                
             <tr key={item.id}>
                     <input type='text' name='task' placeholder={item.task} value={updateTask} onChange={e => {setUpdateTask(e.target.value)}} />
                     <input type='text' name='area' placeholder={item.area} value={updateArea} onChange={e => {setUpdateArea(e.target.value)}} />
                     <input type='text' name='notes' placeholder={item.notes} value={updateNotes} onChange={e => {setUpdateNotes(e.target.value)}} />
                     <input type='date' name='complete by' placeholder={item.complete_by} value={updateCompleteBy} onChange={e => {setUpdateCompleteBy(e.target.value)}} />
-                    <input type='button' value='Edit' onClick={e => handleUpdateItem(e, item)} />
+                    <input type='button' value='Save' onClick={e => handleUpdateItem(e)} />
             </tr>
             )
     }}

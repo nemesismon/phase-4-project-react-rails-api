@@ -13,6 +13,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
     const[phone, setPhone] = useState(0)
     const[email, setEmail] = useState('')
     const[loginCreate, setLoginCreate] = useState(true)
+    const[loginErrors, setLoginErrors] = useState()
     const navigate = useNavigate()
 
     const handleUserLogin = (e) => {
@@ -29,32 +30,25 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
         })
         .then((r) => 
             {if (r.ok) {
-                return r.json()
-            }
-            throw new Error('Incorrect username or password')})
-        .then((resp) => {
-            setSessionUserData(resp)
-            setLoginStatus(true)
-            setSessionProjData(handleGetProjects())
+                return r.json().then((respData) => {
+                    setSessionUserData(respData)
+                    setSessionProjData(handleGetProjects())
+                    setLoginStatus(true)
+                    navigate('/profile')        
+                })
+            } else {
+                return r.json().then((errorData) => {
+                    setLoginErrors(errorData)
+                    setSessionUserData(null)
+                    setLoginStatus(false)
+                })
+            }})
             setUsername('')
-            setPassword('')
-            navigate('/profile')
-        })
-        .catch((error) => {
-            setSessionUserData(null)
-            setLoginStatus(false)
-            setUsername('')
-            setPassword('')
-        })
+            setPassword('')        
     } 
 
     const handleUserCreate = (e) => {
         e.preventDefault();
-
-        if (username || password || passwordConfirmation || companyName || address || tradeType || poc || email === '') {
-            setLoginCreate(true)
-            return
-        }
 
         fetch('/users', {
             method: 'POST',
@@ -74,30 +68,37 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
             }),
         })  .then((r) => {
                 if (r.ok) {
-                    return r.json()
+                    return r.json().then((respData) => {
+                        setSessionProjData(handleGetProjects())
+                        setSessionUserData(respData)
+                        setLoginStatus(true)
+                        navigate('/profile')        
+                    })
+                } else {
+                    return r.json().then((errorData) => {
+                        setLoginErrors(errorData)
+                        setLoginStatus(false)
+                    })
                 }
-                throw new Error('Insufficient or incorrect data')})
-            .then((data) => setSessionUserData(data))
-                setLoginStatus(true)
-                navigate('/profile')
-            .catch((error) => {
-                setLoginStatus(false)
-            })
-                setUsername('')
-                setPassword('')
-                setPasswordConfirmation('')
-                setCompanyName('')
-                setAddress('')
-                setTradeType('')
-                setPoc('')
-                setPhone(0)
-                setEmail('')
-    }
+                
+    })                        
+            setUsername('')
+            setPassword('')
+            setPasswordConfirmation('')
+            setCompanyName('')
+            setAddress('')
+            setTradeType('')
+            setPoc('')
+            setPhone(0)
+            setEmail('')
+}
 
     const loginDisplay = () => {
         if (sessionUserData === null && loginStatus === false) {
+            const loginError = loginErrors ? loginErrors.error : null
             return (
                 <div>
+                    <><h5>{loginError}</h5></>
                     <form onSubmit={handleUserLogin}>
                         <input
                             type='text'
@@ -108,7 +109,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                         />
                         <ul></ul>
                         <input
-                            type='text'
+                            type='password'
                             name='password'
                             placeholder='Password'
                             value={password} 
@@ -122,9 +123,12 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
     }
 
     const createDisplay = () => {
+        const createError = loginErrors ? 'Insufficient or incorrect data.  Please check entries and try again.' : null
         return (
             <div>
+                <><h5>{createError}</h5></>
                 <form onSubmit={handleUserCreate}>
+                    <h5><b>* All fields required</b></h5>
                     <input
                         type='text'
                         name='username'

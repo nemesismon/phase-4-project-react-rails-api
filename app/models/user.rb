@@ -9,6 +9,6 @@ class User < ApplicationRecord
     validates :address, presence: true #better way?
     validates :trade_type, presence: true
     validates :point_of_contact, length: {minimum: 5}
-    validates :phone, length: {is: 10}
+    validates :phone, length: {is: 10}, numericality: { only_integer: true }
     validates :email, email: true
 end

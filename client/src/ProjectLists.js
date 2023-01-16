@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './UserLists.css'
 
-function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessionProjData }) {
+function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessionProjData, projectErrors, setProjectErrors }) {
 
     const [createProject, setCreateProject] = useState(false)
     const [projTitle, setProjTitle] = useState('')
@@ -41,6 +41,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
     }
 
     const projectsView = () => {
+        const showProjectErrors = projectErrors ? projectErrors.error : null
             return (
                 <div>
                     <h1>Project List</h1>
@@ -49,6 +50,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                     </div>
                     <br></br>      
                     <div>
+                        <><h5>{showProjectErrors}</h5></>
                         <table align='center'>
                             <tbody>
                                 <tr>
@@ -68,14 +70,6 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
         const handleProjCreate = (e) => {
             e.preventDefault()
 
-            // if (projTitle || projAddress || projOwnerName === '' || projCompBy === null) {
-            //     setProjTitle('')
-            //     setProjAddress('')
-            //     setProjOwnerName('')
-            //     setCreateProject(false)
-            //     return
-            // }
-
             fetch('/projects', {
                 method: 'POST',
                 headers: {
@@ -90,11 +84,13 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
             })
             .then((r) => {
                 if (r.ok) {
-                    return(r.json())
+                    return r.json().then((respData) => setSessionProjData(respData))
+                } else {
+                    return r.json().then((errorData) => {
+                        setProjectErrors(errorData)
+                    })
                 }
-                throw new Error('Unable to create project')})
-            .then((data) => setSessionProjData(data))
-            .catch((error) => error)
+        })
             setProjTitle('')
             setProjAddress('')
             setProjOwnerName('')
@@ -107,8 +103,9 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                 <div>
                     <h1>Add New Project</h1>
                     <div align='right'>
-                        <input type='button' value='Projects List' onClick={() => setCreateProject(true)}/> 
+                        <input type='button' value='Projects List' onClick={() => setCreateProject(false)}/> 
                     </div>
+                    <h5><b>* All fields required</b></h5>
                     <form onSubmit={handleProjCreate}>
                     <input
                         type='text'

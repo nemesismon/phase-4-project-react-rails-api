@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
             session[:user_id] = user.id
             render json: user, status: :created
         else
-            render json: {error: "Invalid username and/or password"}, status: :unauthorized
+            render json: {error: 'Invalid username and/or password.'}, status: :unauthorized
         end
     end
 
@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
         if user
             render json: user, status: :ok
         else
-            render json: {error: "Unauthorized"}, status: :unauthorized
+            render json: {error: 'Unauthorized.'}, status: :unauthorized
         end
     end
 
@@ -25,7 +25,7 @@ class SessionsController < ApplicationController
             session.destroy
             head :no_content
         else
-            render json: {error: "No record found"}, status: :not_found
+            render json: {error: 'No record found.'}, status: :not_found
         end
     end
 end

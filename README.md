@@ -10,7 +10,7 @@ FlatIron P4 Project - Builder Exchange
     a. one many-to-many
     b. join table
     c. implement associations
-  5. Seperation of Concerns -> backend does work,        frontend is show
+  5. Seperation of Concerns -> backend does work, frontend is show
   6. Full CRUD on a model
   7. Client side routing
   8. Implement authentication/authorization
@@ -18,7 +18,8 @@ FlatIron P4 Project - Builder Exchange
 -> Challenges
   1. Ensuring that updates will work with missing data in both database and state
   2. Filtering duplicates of contractors with many punch items to one project
-  3. Finding multiple conditions that worked for render changes without getting lost in loops
+  3. Finding multiple conditions that work for render changes without getting lost in loops
+  4. Ability to show pertinent errors to the user
 
 -> Contact: michael.w.kolb@gmail.com
 
