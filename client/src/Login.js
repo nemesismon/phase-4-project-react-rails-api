@@ -14,6 +14,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
     const[email, setEmail] = useState('')
     const[loginCreate, setLoginCreate] = useState(true)
     const[loginErrors, setLoginErrors] = useState()
+    const[createErrors, setCreateErrors] = useState()
     const navigate = useNavigate()
 
     const handleUserLogin = (e) => {
@@ -43,6 +44,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                     setLoginStatus(false)
                 })
             }})
+            setCreateErrors()
             setUsername('')
             setPassword('')        
     } 
@@ -76,22 +78,23 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                     })
                 } else {
                     return r.json().then((errorData) => {
-                        setLoginErrors(errorData)
+                        setCreateErrors(errorData)
                         setLoginStatus(false)
                     })
                 }
                 
-    })                        
-            setUsername('')
-            setPassword('')
-            setPasswordConfirmation('')
-            setCompanyName('')
-            setAddress('')
-            setTradeType('')
-            setPoc('')
-            setPhone(0)
-            setEmail('')
-}
+        })                   
+                setLoginErrors()
+                setUsername('')
+                setPassword('')
+                setPasswordConfirmation('')
+                setCompanyName('')
+                setAddress('')
+                setTradeType('')
+                setPoc('')
+                setPhone(0)
+                setEmail('')
+    }
 
     const loginDisplay = () => {
         if (sessionUserData === null && loginStatus === false) {
@@ -123,7 +126,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
     }
 
     const createDisplay = () => {
-        const createError = loginErrors ? 'Insufficient or incorrect data.  Please check entries and try again.' : null
+        const createError = createErrors ? createErrors.error : null
         return (
             <div>
                 <><h5>{createError}</h5></>
