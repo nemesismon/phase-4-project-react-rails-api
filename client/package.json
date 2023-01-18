@@ -15,7 +15,8 @@
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.2",
     "react-router-dom": "^6.4.0",
-    "react-router": "^6.4.0"
+    "react-router": "^6.4.0",
+    "react-select": "^5.7.0"
   },
   "scripts": {
     "start": "PORT=4000 react-scripts start",

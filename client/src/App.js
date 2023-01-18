@@ -5,7 +5,7 @@ import Login from './Login'
 import UserLists from './UserLists'
 import ProjectLists from './ProjectLists'
 import NavBar from './NavBar'
-import {Routes, Route, useNavigate, json} from 'react-router-dom'
+import {Routes, Route, useNavigate} from 'react-router-dom'
 
 function App() {
 
@@ -32,7 +32,7 @@ function App() {
           })
         }
     })
-    }, [])
+  }, [])
 
 
     const handleGetProjects = () => {
@@ -61,7 +61,7 @@ function App() {
               <NavBar loginStatus={loginStatus} />
                 <Routes>
                   <Route path='/' element={<Home />} />
-                  <Route path='/profile' element={<UserLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus}/>} />
+                  <Route path='/profile' element={<UserLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} sessionProjData={sessionProjData}/>} />
                   <Route path='/projects' element={<ProjectLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData} projectErrors={projectErrors} setProjectErrors={setProjectErrors}/>} />
                   <Route path='/login' element={<Login sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} setLoginStatus={setLoginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData} handleGetProjects={handleGetProjects}/>} />
                 </Routes>

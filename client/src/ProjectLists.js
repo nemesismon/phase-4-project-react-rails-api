@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './UserLists.css'
+import './App.css'
 
 function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessionProjData, projectErrors, setProjectErrors }) {
 
@@ -41,7 +42,6 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
     }
 
     const projectsView = () => {
-        const showProjectErrors = projectErrors ? projectErrors.error : null
             return (
                 <div>
                     <h1>Project List</h1>
@@ -50,7 +50,6 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                     </div>
                     <br></br>      
                     <div>
-                        <><h5>{showProjectErrors}</h5></>
                         <table align='center'>
                             <tbody>
                                 <tr>
@@ -84,7 +83,10 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
             })
             .then((r) => {
                 if (r.ok) {
-                    return r.json().then((respData) => setSessionProjData(respData))
+                    return r.json().then((respData) => {
+                        setSessionProjData(respData)
+                        setCreateProject(false)
+                    })
                 } else {
                     return r.json().then((errorData) => {
                         setProjectErrors(errorData)
@@ -95,17 +97,18 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
             setProjAddress('')
             setProjOwnerName('')
             setProjCompBy()
-            setCreateProject(false)
         }
 
         const createProjectForm = () => {
+            const showProjectErrors = projectErrors ? projectErrors.error : null
             return (
                 <div>
                     <h1>Add New Project</h1>
                     <div align='right'>
-                        <input type='button' value='Projects List' onClick={() => setCreateProject(false)}/> 
+                        <input type='button' value='Projects List' onClick={() => {setCreateProject(false); setProjectErrors(null)}}/> 
                     </div>
-                    <h5><b>* All fields required</b></h5>
+                    <h5><b>*All fields required</b></h5>
+                    <><h5 className='make_red'>{showProjectErrors}</h5></>
                     <form onSubmit={handleProjCreate}>
                     <input
                         type='text'

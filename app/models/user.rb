@@ -2,7 +2,7 @@ class User < ApplicationRecord
     has_secure_password
 
     has_many :punch_items
-    has_many :projects, through: :punch_items
+    has_many :projects, -> { distinct }, through: :punch_items
 
     validates :username, length: {minimum: 5}, uniqueness: true
     validates :company_name, length: {minimum: 3}

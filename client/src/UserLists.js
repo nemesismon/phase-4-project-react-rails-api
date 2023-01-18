@@ -1,18 +1,19 @@
 import React, {useState} from 'react'
 import EditForm from './EditForm'
 import './UserLists.css'
+import './App.css'
 
-function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
+function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionProjData}) {
 
     const [createPunchItem, setCreatePunchItem] = useState(false)
-    const [itemProjID, setItemProjID] = useState(null)
     const [itemTask, setItemTask] = useState('')
     const [itemArea, setItemArea] = useState('')
     const [itemNotes, setItemNotes] = useState('')
-    const [itemCompBy, setItemCompBy] = useState(null)
+    const [itemCompBy, setItemCompBy] = useState()
     const [itemErrors, setItemErrors] = useState()
     const [editErrors, setEditErrors] = useState()
-
+    const [selectProject, setSelectProject] = useState()
+    const [selectArea, setSelectArea] = useState()
      
     const handleItemCreate = (e) => {
         e.preventDefault();
@@ -23,9 +24,9 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                 'Content-type': 'application/json',
             },
             body: JSON.stringify({
-                    project_id: itemProjID,
+                    project_id: selectProject,
                     task: itemTask,
-                    area: itemArea,
+                    area: selectArea,
                     notes: itemNotes,
                     complete_by: itemCompBy,
                     active: true,
@@ -36,6 +37,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                 return r.json().then((respData) => {
                     sessionUserData.punch_items.push(respData)
                     setSessionUserData({ ...sessionUserData })
+                    setCreatePunchItem(false)
                 })
             } else {
                 return r.json().then((errorData) => {
@@ -43,12 +45,12 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                 })
             }
         })
-        setItemProjID()
+        setSelectProject(null)
+        setSelectArea(null)
         setItemTask('')
         setItemArea('')
         setItemNotes('')
-        setItemCompBy()
-        setCreatePunchItem(false)
+        setItemCompBy('')
     }
     
     const handleCompleteItem = (item) => {
@@ -66,7 +68,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
     const listPunchItems = () => {
          return sessionUserData.punch_items.map((item) => {
             return (
-                <EditForm item={item} handleCompleteItem={handleCompleteItem} sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} setEditErrors={setEditErrors}/>
+                <EditForm item={item} handleCompleteItem={handleCompleteItem} sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} setEditErrors={setEditErrors} projectSelector={projectSelector} areaSelector={areaSelector} selectProject={selectProject} selectArea={selectArea} sessionProjData={sessionProjData}/>
             )
          })
     }
@@ -75,6 +77,43 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
         if (sessionUserData.punch_items.length === 0) {
             return (<h4>There are currently no items to complete</h4>)
         }
+    }
+
+    const projectSelector = () => {
+        return (
+        <select name='project_selector' onChange={e => setSelectProject(e.target.value)}>
+            <option value={null}>Select Project</option>
+            {sessionProjData.map((project) => {
+                return (
+                    <option key={project.id} value={project.id}>{project.title}</option>
+                )
+            })}
+        </select>
+        )
+    }
+
+    // put in data file
+    const areas = [
+        {value: 'Offsite', label: 'Offsite'},
+        {value: 'Site', label: 'Site'},
+        {value: 'Building', label: 'Building'},
+        {value: 'Electrical', label: 'Electrical'},
+        {value: 'Plumbing', label: 'Plumbing'},
+        {value: 'HVAC', label: 'HVAC'},
+    ]
+
+    const areaSelector = () => {
+        return (
+            <select name='area-selector' onChange={e => setSelectArea(e.target.value)}>
+                <option value={null}>Select Area</option>
+                {areas.map((area) => {
+                    return (
+                        <option key={area.id} value={area.id}>{area.value}</option>
+                    )
+                })}
+            </select>
+        )
+
     }
     
     const execProfile = () => {
@@ -87,22 +126,19 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                 <h4>Loading...</h4>
             )
         } else if (sessionUserData !== null && loginStatus === true) {
-            const showEditErrors = editErrors ? editErrors.error : null
-            const showItemErrors = itemErrors ? itemErrors.error : null
             if (createPunchItem === false) {
             return (
                 <div>
                     <h1>Punch List</h1>
                     <h4>Welcome, {sessionUserData.point_of_contact}!</h4>
                             <div align='right'>
-                                <input type='button' value='Create Punch Item' onClick={() => setCreatePunchItem(true)}/> 
+                                <input type='button' value='Create Punch Item' onClick={() => {setCreatePunchItem(true); setItemErrors(null)}}/> 
                             </div>
                         <div>
-                        <><h5>{showItemErrors}</h5></>
-                        <><h5>{showEditErrors}</h5></>
-                            <table align='center'>
+                            <table align='center' className=''>
                                 <tr>
                                     <th>Task</th>
+                                    <th>Project</th>
                                     <th>Area</th>
                                     <th>Notes</th>
                                     <th>Complete by:</th>
@@ -113,21 +149,19 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                         </div>
                 </div>
             )} else {
+                const showEditErrors = editErrors ? editErrors.error : null
+                const showItemErrors = itemErrors ? itemErrors.error : null 
                 return (
                     <div>
                         <h1>Add New Punch Item</h1>
                         <div align='right'>
-                            <input type='button' value='Back to Punch List' onClick={() => setCreatePunchItem(false)}/> 
+                            <input type='button' value='Back to Punch List' onClick={() => {setCreatePunchItem(false); setEditErrors(null)}}/> 
                         </div>
-                        <h5><b>* All fields required</b></h5>
+                        <h5><b>*All fields required</b></h5>
+                        <><h5 className='make_red'>{showItemErrors}</h5></>
+                        <><h5 className='Make_red'>{showEditErrors}</h5></>
                         <form onSubmit={handleItemCreate}>
-                            <input
-                                type='text'
-                                name='project_id'
-                                placeholder='Project Name (project_id)'
-                                value={itemProjID}
-                                onChange={(e) => setItemProjID(e.target.value)}
-                            />
+                            {projectSelector()}
                             <ul></ul>
                             <input
                                 type='text'
@@ -137,13 +171,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus}) {
                                 onChange={(e) => setItemTask(e.target.value)}
                             />
                             <ul></ul>
-                            <input
-                                type='text'
-                                name='area'
-                                placeholder='Area'
-                                value={itemArea} 
-                                onChange={(e) => setItemArea(e.target.value)}
-                            />
+                            {areaSelector()}
                             <ul></ul>
                             <input
                                 type='text'

@@ -17,7 +17,6 @@ class ProjectsController < ApplicationController
     def create
         user = User.find_by(id: session[:user_id])
         project = Project.new(project_params)
-        # byebug
         if user&&project.valid?
             project.save
             projects = Project.all

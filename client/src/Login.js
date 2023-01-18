@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import './App.css';
 
 function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus, setSessionProjData, handleGetProjects}) {
 
@@ -51,7 +52,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
 
     const handleUserCreate = (e) => {
         e.preventDefault();
-
+            
         fetch('/users', {
             method: 'POST',
             headers: {
@@ -98,10 +99,10 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
 
     const loginDisplay = () => {
         if (sessionUserData === null && loginStatus === false) {
-            const loginError = loginErrors ? loginErrors.error : null
+            const showLoginError = loginErrors ? loginErrors.error : null
             return (
                 <div>
-                    <><h5>{loginError}</h5></>
+                    <><h5 className='make_red'>{showLoginError}</h5></>
                     <form onSubmit={handleUserLogin}>
                         <input
                             type='text'
@@ -129,9 +130,9 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
         const createError = createErrors ? createErrors.error : null
         return (
             <div>
-                <><h5>{createError}</h5></>
+                <><h5 className='make_red'>{createError}</h5></>
                 <form onSubmit={handleUserCreate}>
-                    <h5><b>* All fields required</b></h5>
+                    <h5><b>*All fields required</b></h5>
                     <input
                         type='text'
                         name='username'
