@@ -7,7 +7,9 @@ class UsersController < ApplicationController
         if user.valid?
             user.save!
             session[:user_id] = user.id
-            render json: user, status: :created 
+            render json: user, status: :created
+        else
+            render json: {error: 'Unprocessable entity'}, status: :unprocessable_entity
         end
     end
 

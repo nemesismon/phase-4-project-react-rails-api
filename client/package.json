@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:3000",
+  "homepage": "https://github.com/nemesismon/phase-4-project-react-rails-api",
   "engines": {
     "node": "16.x"
   },
@@ -19,6 +20,8 @@
     "react-select": "^5.7.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "PORT=4000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

@@ -4,7 +4,7 @@ import './UserLists.css'
 import './App.css'
 import { useNavigate, Link } from 'react-router-dom'
 
-function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionProjData}) {
+function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionProjData, handleGetProjects}) {
 
     console.log(sessionProjData)
 
@@ -42,6 +42,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                     sessionUserData.punch_items.push(respData)
                     setSessionUserData({ ...sessionUserData })
                     setCreatePunchItem(false)
+                    handleGetProjects()
                 })
             } else {
                 return r.json().then((errorData) => {

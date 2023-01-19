@@ -29,7 +29,7 @@ class SessionsController < ApplicationController
     end
 
     def render_record_not_found
-        render json: { error: 'Record nt found.'}, status: :not_found
+        render json: { error: 'Record not found.'}, status: :not_found
     end
 
     def render_unprocessable_entity

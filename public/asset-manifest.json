@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/nemesismon/phase-4-project-react-rails-api/static/css/main.5394cfad.chunk.css",
+    "main.js": "/nemesismon/phase-4-project-react-rails-api/static/js/main.ca13ea98.chunk.js",
+    "main.js.map": "/nemesismon/phase-4-project-react-rails-api/static/js/main.ca13ea98.chunk.js.map",
+    "runtime-main.js": "/nemesismon/phase-4-project-react-rails-api/static/js/runtime-main.9a55c798.js",
+    "runtime-main.js.map": "/nemesismon/phase-4-project-react-rails-api/static/js/runtime-main.9a55c798.js.map",
+    "static/js/2.377b8ce6.chunk.js": "/nemesismon/phase-4-project-react-rails-api/static/js/2.377b8ce6.chunk.js",
+    "static/js/2.377b8ce6.chunk.js.map": "/nemesismon/phase-4-project-react-rails-api/static/js/2.377b8ce6.chunk.js.map",
+    "static/js/3.24307ac9.chunk.js": "/nemesismon/phase-4-project-react-rails-api/static/js/3.24307ac9.chunk.js",
+    "static/js/3.24307ac9.chunk.js.map": "/nemesismon/phase-4-project-react-rails-api/static/js/3.24307ac9.chunk.js.map",
+    "index.html": "/nemesismon/phase-4-project-react-rails-api/index.html",
+    "static/css/main.5394cfad.chunk.css.map": "/nemesismon/phase-4-project-react-rails-api/static/css/main.5394cfad.chunk.css.map",
+    "static/js/2.377b8ce6.chunk.js.LICENSE.txt": "/nemesismon/phase-4-project-react-rails-api/static/js/2.377b8ce6.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.9a55c798.js",
+    "static/js/2.377b8ce6.chunk.js",
+    "static/css/main.5394cfad.chunk.css",
+    "static/js/main.ca13ea98.chunk.js"
+  ]
+}

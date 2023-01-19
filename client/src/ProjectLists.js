@@ -157,12 +157,6 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
 
         const execProjects = () => {
             if (loginStatus === true) {
-                // if (sessionProjData === [] ) {   
-                //     return (
-                //         <h4>There are currently no projects</h4>
-                //     )                 
-                // }
-                // else
                  if (createProject === false) {
                     return (
                         <div>
