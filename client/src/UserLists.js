@@ -149,8 +149,8 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                                 <input type='button' value='Create Punch Item' onClick={() => {setCreatePunchItem(true); setItemErrors(null)}}/> 
                             </div>
                         <div>
-                            <table align='center' className=''>
-                                <tr>
+                            <table align='center' className='table-auto'>
+                                <tr className='bg-emerald-200'>
                                     <th>Task</th>
                                     <th>Project</th>
                                     <th>Area</th>

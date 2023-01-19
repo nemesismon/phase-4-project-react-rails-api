@@ -34,8 +34,7 @@ function App() {
     })
   }, [])
 
-
-    const handleGetProjects = () => {
+  const handleGetProjects = () => {
           fetch('/projects')
             .then((r) => {
                 if (r.ok) {
