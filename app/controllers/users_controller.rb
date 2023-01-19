@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-    rescue_from ActiveRecord::RecordNotFound, with: :render_record_not_found
-    rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity
+    rescue_from ActiveRecord::RecordNotFound => notFound, with: :render_record_not_found
+    rescue_from ActiveRecord::RecordInvalid => invalid, with: :render_unprocessable_entity
 
     def create
         user = User.new(create_params)
@@ -9,7 +9,7 @@ class UsersController < ApplicationController
             session[:user_id] = user.id
             render json: user, status: :created
         else
-            render json: {error: 'Incorrect or invalid data entered - please try again!'}, status: :unprocessable_entity
+            render json: {user.errors.full_messages}, status: :unprocessable_entity
         end
     end
 
@@ -18,7 +18,7 @@ class UsersController < ApplicationController
         if users!
             render json: users, status: :ok
         else
-            render json: {error: 'No user(s) found.'}, status: :not_found
+            render json: {users.errors.full_messages}, status: :not_found
         end
     end
 
@@ -34,12 +34,12 @@ class UsersController < ApplicationController
         params.permit(:username, :password, :password_confirmation, :company_name, :address, :trade_type, :point_of_contact, :phone, :email)
     end
 
-    def render_record_not_found
-        render json: { error: 'Record not found.'}, status: :not_found
+    def render_record_not_found (notFound)
+        render json: {notFound.errors.full_messages}, status: :not_found
     end
 
-    def render_unprocessable_entity
-        render json: {error: 'Incorrect or insufficient data entered - please try again!.'}, status: :unprocessable_entity
+    def render_unprocessable_entity (invalid)
+        render json: {invalid.errors.full_messages}, status: :unprocessable_entity
     end
 
 end

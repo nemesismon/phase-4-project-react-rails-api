@@ -1,6 +1,6 @@
 class PunchItemsController < ApplicationController
-    rescue_from ActiveRecord::RecordNotFound, with: :render_record_not_found
-    rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity
+    rescue_from ActiveRecord::RecordNotFound => notFound, with: :render_record_not_found
+    rescue_from ActiveRecord::RecordInvalid => invalid, with: :render_unprocessable_entity
 
     before_action :find_user
     
@@ -33,12 +33,12 @@ class PunchItemsController < ApplicationController
         params.permit(:id, :user_id, :project_id, :task, :area, :notes, :complete_by, :active)
     end
 
-    def render_record_not_found
-        render json: { error: 'Record nt found.'}, status: :not_found
+    def render_record_not_found (notFound)
+        render json: {notFound.errors.full_messages}, status: :not_found
     end
 
-    def render_unprocessable_entity
-        render json: {error: 'Incorrect or insufficient data entered - please try again!'}, status: :unprocessable_entity
+    def render_unprocessable_entity (invalid)
+        render json: {invalid.errors.full_messages}, status: :unprocessable_entity
     end
 
 end
