@@ -61,6 +61,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                             {projectsList()}
                             </tbody>
                         </table>
+                        {projMessages()}
                     </div>
                 </div>
             )
@@ -97,6 +98,12 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
             setProjAddress('')
             setProjOwnerName('')
             setProjCompBy()
+        }
+
+        const projMessages = () => {
+                if (sessionProjData.length === 0 || sessionProjData === undefined) {
+                return (<h5>Please Create Project to begin creating Punch Items</h5>)
+            }
         }
 
         const createProjectForm = () => {
@@ -150,12 +157,13 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
 
         const execProjects = () => {
             if (loginStatus === true) {
-                if (sessionProjData === null) {   
-                    return (
-                        <h4>There are currently no projects</h4>
-                    )                 
-                }
-                else if (createProject === false) {
+                // if (sessionProjData === [] ) {   
+                //     return (
+                //         <h4>There are currently no projects</h4>
+                //     )                 
+                // }
+                // else
+                 if (createProject === false) {
                     return (
                         <div>
                             {projectsView()}

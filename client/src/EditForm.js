@@ -8,8 +8,6 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
     const [updateCompleteBy, setUpdateCompleteBy] = useState()
     const [titleFound, setTitleFound] = useState(false)
 
-    console.log(selectProject)
-
     const handleUpdateItem = (e) => {
         e.preventDefault();
 
@@ -51,19 +49,13 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
     }
 
     const punchItemToProjectTitle = () => {
-        //find project title using punch_item.project_id
-        // debugger
-        if (sessionProjData !== null) {
+        if (sessionProjData.length !== 0 && sessionProjData != undefined) {
             return (sessionProjData.find(proj => proj.id === item.project_id)).title
         }
     }
 
-    console.log(sessionUserData)
-    console.log(sessionProjData)
-
     const execForm = () => {
     if (editItem === false && titleFound === false) {
-        // debugger
         return (
             <tr key={item.id}>
                 <td>{item.task}</td>

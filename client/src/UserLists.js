@@ -2,8 +2,11 @@ import React, {useState} from 'react'
 import EditForm from './EditForm'
 import './UserLists.css'
 import './App.css'
+import { useNavigate, Link } from 'react-router-dom'
 
 function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionProjData}) {
+
+    console.log(sessionProjData)
 
     const [createPunchItem, setCreatePunchItem] = useState(false)
     const [itemTask, setItemTask] = useState('')
@@ -14,7 +17,8 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
     const [editErrors, setEditErrors] = useState()
     const [selectProject, setSelectProject] = useState()
     const [selectArea, setSelectArea] = useState()
-     
+    const navigate = useNavigate()
+
     const handleItemCreate = (e) => {
         e.preventDefault();
 
@@ -75,7 +79,14 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
 
     const itemMessages = () => {
         if (sessionUserData.punch_items.length === 0) {
-            return (<h4>There are currently no items to complete</h4>)
+            return (<h5 style={{color: 'green'}}>There are currently no items to complete!</h5>)
+        }     
+    }
+
+    const projMessages = () => {
+        // debugger
+        if (sessionProjData.length === 0 || sessionProjData === undefined) {
+        return (<h5>Please add a <Link to={'/projects'}>Project</Link> to begin creating Punch Items</h5>)
         }
     }
 
@@ -113,7 +124,6 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                 })}
             </select>
         )
-
     }
     
     const execProfile = () => {
@@ -126,7 +136,11 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                 <h4>Loading...</h4>
             )
         } else if (sessionUserData !== null && loginStatus === true) {
-            if (createPunchItem === false) {
+            if (sessionProjData === [] || sessionProjData === undefined) {
+                console.log(sessionProjData)
+                navigate('/projects')
+            }
+            else if (createPunchItem === false) {
             return (
                 <div>
                     <h1>Punch List</h1>
@@ -146,6 +160,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                                     {listPunchItems()}
                             </table>
                                 {itemMessages()}
+                                {projMessages()}
                         </div>
                 </div>
             )} else {

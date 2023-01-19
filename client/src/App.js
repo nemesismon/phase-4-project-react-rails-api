@@ -10,7 +10,7 @@ import {Routes, Route, useNavigate} from 'react-router-dom'
 function App() {
 
   const [sessionUserData, setSessionUserData] = useState(null)
-  const [sessionProjData, setSessionProjData] = useState(null)
+  const [sessionProjData, setSessionProjData] = useState([])
   const [loginStatus, setLoginStatus] = useState(false)
   const [projectErrors, setProjectErrors] = useState()
   const navigate = useNavigate()
@@ -45,7 +45,7 @@ function App() {
                 } else {
                   return r.json().then((errorData) => {
                     setProjectErrors(errorData)
-                    setSessionProjData(null)
+                    setSessionProjData([])
                   })
                 }
     })
