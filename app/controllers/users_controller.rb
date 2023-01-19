@@ -9,7 +9,7 @@ class UsersController < ApplicationController
             session[:user_id] = user.id
             render json: user, status: :created
         else
-            render json: {error: 'Unprocessable entity'}, status: :unprocessable_entity
+            render json: {error: 'Incorrect or invalid data entered - please try again!'}, status: :unprocessable_entity
         end
     end
 
@@ -18,7 +18,7 @@ class UsersController < ApplicationController
         if users!
             render json: users, status: :ok
         else
-            render json: {error: 'No record found.'}, status: :not_found
+            render json: {error: 'No user(s) found.'}, status: :not_found
         end
     end
 
@@ -39,7 +39,7 @@ class UsersController < ApplicationController
     end
 
     def render_unprocessable_entity
-        render json: {error: 'Incorrect or insufficient data.'}, status: :unprocessable_entity
+        render json: {error: 'Incorrect or insufficient data entered - please try again!.'}, status: :unprocessable_entity
     end
 
 end

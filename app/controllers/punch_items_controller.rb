@@ -38,7 +38,7 @@ class PunchItemsController < ApplicationController
     end
 
     def render_unprocessable_entity
-        render json: {error: 'Incorrect or insufficient data.'}, status: :unprocessable_entity
+        render json: {error: 'Incorrect or insufficient data entered - please try again!'}, status: :unprocessable_entity
     end
 
 end

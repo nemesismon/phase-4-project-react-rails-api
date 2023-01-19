@@ -1,13 +1,15 @@
 {
   "name": "phase-4-deploying-app-demo",
   "description": "Build scripts for Heroku",
+  "homepage": "https://github.com/nemesismon/phase-4-project-react-rails-api",
   "engines": {
     "node": "16.x"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "cp -a client/build/. public/ && gh-pages -d build",
     "build": "npm install --prefix client && npm run build --prefix client",
     "clean": "rm -rf public",
-    "deploy": "cp -a client/build/. public/",
     "heroku-postbuild": "npm run clean && npm run build && npm run deploy"
   },
   "dependencies": {

@@ -33,7 +33,7 @@ class SessionsController < ApplicationController
     end
 
     def render_unprocessable_entity
-        render json: {error: 'Incorrect or insufficient data.'}, status: :unprocessable_entity
+        render json: {error: 'Incorrect or insufficient data entered - plesae try again!'}, status: :unprocessable_entity
     end
 
 end

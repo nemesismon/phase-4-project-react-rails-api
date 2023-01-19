@@ -22,7 +22,7 @@ class ProjectsController < ApplicationController
             projects = Project.all
             render json: projects, status: :accepted
         else
-            render json: {error: 'Unprocessable entity'}, status: :unprocessable_entity
+            render json: {error: 'Invalid or incorrect data - please try again!'}, status: :unprocessable_entity
         end
     end
 
