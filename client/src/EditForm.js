@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 
-function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserData, setEditErrors, projectSelector, areaSelector, selectProject, selectArea, sessionProjData}) {
+function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserData, setEditErrors, sessionProjData}) {
 
     const [editItem, setEditItem] = useState(false)
     const [updateTask, setUpdateTask] = useState('')
+    const [updateProject, setUpdateProject] = useState('')
+    const [updateArea, setUpdateArea] = useState('')
     const [updateNotes, setUpdateNotes] = useState('')
     const [updateCompleteBy, setUpdateCompleteBy] = useState()
     const [titleFound, setTitleFound] = useState(false)
@@ -17,9 +19,9 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                project_id: selectProject,
+                project_id: updateProject,
                 task: updateTask,
-                area: selectArea,
+                area: updateArea,
                 notes: updateNotes,
                 complete_by: updateCompleteBy
             })  
@@ -28,12 +30,15 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
             if (r.ok) {
                 return r.json().then((respData) => {
                     console.log(respData)
-                    item.project_id = respData.project_id ? respData.project_id : item.project_id
-                    item.task = respData.task ? respData.task : item.task
-                    item.area = respData.area ? respData.area : item.area
-                    item.notes = respData.notes ? respData.notes : item.notes
-                    item.complete_by = respData.complete_by ? respData.complete_by : item.complete_by
-                    setSessionUserData({ ...sessionUserData })
+                    // item.project_id = respData.project_id ? respData.project_id : item.project_id
+                    // item.task = respData.task ? respData.task : item.task
+                    // item.area = respData.area ? respData.area : item.area
+                    // item.notes = respData.notes ? respData.notes : item.notes
+                    // item.complete_by = respData.complete_by ? respData.complete_by : item.complete_by
+                    setSessionUserData(respData)
+                    setUpdateTask('')
+                    setUpdateNotes('')
+                    setUpdateCompleteBy()            
                     setEditItem(false)
                 })
             } else {
@@ -42,16 +47,50 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
                 })
             }
         })
-        setUpdateTask('')
-        setUpdateNotes('')
-        setUpdateCompleteBy()
-        setEditItem(false)        
     }
 
     const punchItemToProjectTitle = () => {
-        if (sessionProjData.length !== 0 && sessionProjData != undefined) {
+        // debugger
+        if (sessionProjData !== undefined) {
             return (sessionProjData.find(proj => proj.id === item.project_id)).title
+        } else {
+            return ( <p>Loading...</p>)
         }
+    }
+
+    const updateProjSelector = () => {
+        return (
+        <select name='update_project_selector' onChange={e => setUpdateProject(e.target.value)}>
+            <option value={''} label={punchItemToProjectTitle()} disabled selected>Select Project</option>
+            {sessionProjData.map((project) => {
+                return (
+                    <option key={project.id} value={project.id}>{project.title}</option>
+                )
+            })}
+        </select>
+        )
+    }
+
+    const areas = [
+        {value: 'Offsite', label: 'Offsite'},
+        {value: 'Site', label: 'Site'},
+        {value: 'Building', label: 'Building'},
+        {value: 'Electrical', label: 'Electrical'},
+        {value: 'Plumbing', label: 'Plumbing'},
+        {value: 'HVAC', label: 'HVAC'},
+    ]
+
+    const updateAreaSelector = () => {
+        return (
+            <select name='update_area-selector' onChange={e => setUpdateArea(e.target.value)}>
+                <option value={''} label={item.area} disabled selected>Select Area</option>
+                {areas.map((area) => {
+                    return (
+                        <option key={area.id} value={area.value}>{area.value}</option>
+                    )
+                })}
+            </select>
+        )
     }
 
     const execForm = () => {
@@ -63,18 +102,18 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
                 <td>{item.area}</td>
                 <td>{item.notes}</td>
                 <td>{item.complete_by}</td>
-                <td><input type='button' value='Complete' onClick={() => handleCompleteItem(item)}/></td>
                 <td><input type='button' value='Edit' onClick={() => setEditItem(true)}/></td>
+                <td><input type='button' value='Complete' onClick={() => handleCompleteItem(item)}/></td>
             </tr>
         )
     } else if (item !== null && editItem === true){
             return ( 
             <tr key={item.id}>
                     <td><input type='text' name='task' placeholder={item.task} value={updateTask} onChange={e => {setUpdateTask(e.target.value)}} /></td>
-                    <td>{projectSelector()}</td>
-                    <td>{areaSelector()}</td>
+                    <td>{updateProjSelector()}</td>
+                    <td>{updateAreaSelector()}</td>
                     <td><input type='text' name='notes' placeholder={item.notes} value={updateNotes} onChange={e => {setUpdateNotes(e.target.value)}} /></td>
-                    <td><input type='date' name='complete by' placeholder={item.complete_by} value={updateCompleteBy} onChange={e => {setUpdateCompleteBy(e.target.value)}} /></td>
+                    <td><input type='date' name='complete_by' defaultValue={item.complete_by} value={updateCompleteBy} onChange={e => {setUpdateCompleteBy(e.target.value)}} /></td>
                     <td><input type='button' value='Save' onClick={e => handleUpdateItem(e)} /></td>
             </tr>
             )

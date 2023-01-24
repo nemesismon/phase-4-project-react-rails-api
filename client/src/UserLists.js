@@ -4,20 +4,18 @@ import './UserLists.css'
 import './App.css'
 import { useNavigate, Link } from 'react-router-dom'
 
-function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionProjData, handleGetProjects}) {
+function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionProjData, handleGetProjects, setSessionProjData}) {
 
-    console.log(sessionProjData)
+    console.log(sessionUserData)
 
     const [createPunchItem, setCreatePunchItem] = useState(false)
     const [itemTask, setItemTask] = useState('')
-    const [itemArea, setItemArea] = useState('')
     const [itemNotes, setItemNotes] = useState('')
     const [itemCompBy, setItemCompBy] = useState()
     const [itemErrors, setItemErrors] = useState()
     const [editErrors, setEditErrors] = useState()
     const [selectProject, setSelectProject] = useState()
     const [selectArea, setSelectArea] = useState()
-    const navigate = useNavigate()
 
     const handleItemCreate = (e) => {
         e.preventDefault();
@@ -39,10 +37,14 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
         .then((r) => {
             if (r.ok) {
                 return r.json().then((respData) => {
-                    sessionUserData.punch_items.push(respData)
-                    setSessionUserData({ ...sessionUserData })
+                    // sessionUserData.punch_items.push(respData)
+                    setSessionUserData(respData)
                     setCreatePunchItem(false)
-                    handleGetProjects()
+                    setSelectProject(null)
+                    setSelectArea(null)
+                    setItemTask('')
+                    setItemNotes('')
+                    setItemCompBy('')            
                 })
             } else {
                 return r.json().then((errorData) => {
@@ -50,12 +52,6 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                 })
             }
         })
-        setSelectProject(null)
-        setSelectArea(null)
-        setItemTask('')
-        setItemArea('')
-        setItemNotes('')
-        setItemCompBy('')
     }
     
     const handleCompleteItem = (item) => {
@@ -73,7 +69,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
     const listPunchItems = () => {
          return sessionUserData.punch_items.map((item) => {
             return (
-                <EditForm item={item} handleCompleteItem={handleCompleteItem} sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} setEditErrors={setEditErrors} projectSelector={projectSelector} areaSelector={areaSelector} selectProject={selectProject} selectArea={selectArea} sessionProjData={sessionProjData}/>
+                <EditForm item={item} handleCompleteItem={handleCompleteItem} sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} setEditErrors={setEditErrors} projectSelector={projectSelector} areaSelector={areaSelector} selectProject={selectProject} selectArea={selectArea} sessionProjData={sessionProjData} handleGetProjects={handleGetProjects} setSessionProjData={setSessionProjData}/>
             )
          })
     }
@@ -85,8 +81,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
     }
 
     const projMessages = () => {
-        // debugger
-        if (sessionProjData.length === 0 || sessionProjData === undefined) {
+        if (sessionProjData === undefined) {
         return (<h5>Please add a <Link to={'/projects'}>Project</Link> to begin creating Punch Items</h5>)
         }
     }
@@ -94,7 +89,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
     const projectSelector = () => {
         return (
         <select name='project_selector' onChange={e => setSelectProject(e.target.value)}>
-            <option value={null}>Select Project</option>
+            <option value={''} disabled selected>Select Project</option>
             {sessionProjData.map((project) => {
                 return (
                     <option key={project.id} value={project.id}>{project.title}</option>
@@ -117,10 +112,10 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
     const areaSelector = () => {
         return (
             <select name='area-selector' onChange={e => setSelectArea(e.target.value)}>
-                <option value={null}>Select Area</option>
+                <option value={''} disabled selected>Select Area</option>
                 {areas.map((area) => {
                     return (
-                        <option key={area.id} value={area.id}>{area.value}</option>
+                        <option key={area.id} value={area.value}>{area.value}</option>
                     )
                 })}
             </select>
@@ -137,11 +132,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                 <h4>Loading...</h4>
             )
         } else if (sessionUserData !== null && loginStatus === true) {
-            if (sessionProjData === [] || sessionProjData === undefined) {
-                console.log(sessionProjData)
-                navigate('/projects')
-            }
-            else if (createPunchItem === false) {
+            if (createPunchItem === false) {
             return (
                 <div>
                     <h1>Punch List</h1>
@@ -165,8 +156,15 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                         </div>
                 </div>
             )} else {
-                const showEditErrors = editErrors ? editErrors.error : null
-                const showItemErrors = itemErrors ? itemErrors.error : null 
+                const showEditErrors = editErrors ? <h5 className='make_red'>{
+                        editErrors.errors.map((error) => {
+                            return (<li key={error}>{error}</li>)
+                    })}</h5> : null
+                const showItemErrors = itemErrors ? 
+                    <h5 className='make_red'>{
+                        itemErrors.errors.map((error) => {
+                            return (<li key={error}>{error}</li>)
+                    })}</h5> : null 
                 return (
                     <div>
                         <h1>Add New Punch Item</h1>
@@ -174,8 +172,8 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                             <input type='button' value='Back to Punch List' onClick={() => {setCreatePunchItem(false); setEditErrors(null)}}/> 
                         </div>
                         <h5><b>*All fields required</b></h5>
-                        <><h5 className='make_red'>{showItemErrors}</h5></>
-                        <><h5 className='Make_red'>{showEditErrors}</h5></>
+                        {showItemErrors}
+                        {showEditErrors}
                         <form onSubmit={handleItemCreate}>
                             {projectSelector()}
                             <ul></ul>

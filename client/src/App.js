@@ -9,9 +9,10 @@ import {Routes, Route, useNavigate} from 'react-router-dom'
 
 function App() {
 
-  const [sessionUserData, setSessionUserData] = useState(null)
-  const [sessionProjData, setSessionProjData] = useState([])
+  const [sessionUserData, setSessionUserData] = useState()
+  const [sessionProjData, setSessionProjData] = useState()
   const [loginStatus, setLoginStatus] = useState(false)
+  const [userErrors, setUserErrors] = useState()
   const [projectErrors, setProjectErrors] = useState()
   const navigate = useNavigate()
 
@@ -26,6 +27,7 @@ function App() {
           })
         } else {
           return r.json().then((errorData) => {
+            setUserErrors(errorData)
             setSessionUserData(null)
             setLoginStatus(false)
             navigate('/login')    
@@ -33,7 +35,6 @@ function App() {
         }
     })
   }, [])
-
 
     const handleGetProjects = () => {
           fetch('/projects')
@@ -51,6 +52,8 @@ function App() {
     })
   }
 
+  console.log(sessionUserData)
+  
   const execApp = () => {
     return (
       <div className='App'>
@@ -61,9 +64,9 @@ function App() {
               <NavBar loginStatus={loginStatus} />
                 <Routes>
                   <Route path='/' element={<Home />} />
-                  <Route path='/profile' element={<UserLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} sessionProjData={sessionProjData} handleGetProjects={handleGetProjects}/>} />
+                  <Route path='/profile' element={<UserLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} sessionProjData={sessionProjData} handleGetProjects={handleGetProjects} setSessionProjData={setSessionProjData}/>} />
                   <Route path='/projects' element={<ProjectLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData} projectErrors={projectErrors} setProjectErrors={setProjectErrors}/>} />
-                  <Route path='/login' element={<Login sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} setLoginStatus={setLoginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData} handleGetProjects={handleGetProjects}/>} />
+                  <Route path='/login' element={<Login sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} setLoginStatus={setLoginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData}/>} />
                 </Routes>
           </div>
       </div>

@@ -1,6 +1,5 @@
 class SessionsController < ApplicationController
-    rescue_from ActiveRecord::RecordNotFound => notFound, with: :render_record_not_found
-    rescue_from ActiveRecord::RecordInvalid => invalid, with: :render_unprocessable_entity
+    rescue_from ActiveRecord::RecordNotFound, with: :render_record_not_found
 
     before_action :find_user, only: [:show, :destroy]
 
@@ -10,7 +9,7 @@ class SessionsController < ApplicationController
             session[:user_id] = user.id
             render json: user, status: :created
         else
-            render json: {user.errors.full_messages}, status: :unauthorized
+            render json: {error: 'Unauthorized'}, status: :unauthorized
         end
     end
 
@@ -30,12 +29,8 @@ class SessionsController < ApplicationController
         @user = User.find_by!(id: session[:user_id])
     end
 
-    def render_record_not_found (notFound)
-        render json: {notFound.errors.full_messages}, status: :not_found
-    end
-
-    def render_unprocessable_entity (invalid)
-        render json: {invalid.errors.full_messages}, status: :unprocessable_entity
+    def render_record_not_found
+        render json: {error: 'Unauthorized'}, status: :unauthorized
     end
 
 end

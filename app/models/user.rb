@@ -10,5 +10,5 @@ class User < ApplicationRecord
     validates :trade_type, presence: true
     validates :point_of_contact, length: {minimum: 2}
     validates :phone, length: {is: 10}, numericality: { only_integer: true }
-    validates :email, email: true
+    validates :email, email: true, uniqueness: true
 end

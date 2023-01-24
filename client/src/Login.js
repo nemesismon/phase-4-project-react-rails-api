@@ -4,6 +4,8 @@ import './App.css';
 
 function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus, setSessionProjData, handleGetProjects}) {
 
+    console.log(sessionUserData)
+
     const[username, setUsername] = useState('')
     const[password, setPassword] = useState('')
     const[passwordConfirmation, setPasswordConfirmation] = useState('')
@@ -11,7 +13,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
     const[address, setAddress] = useState('')
     const[tradeType, setTradeType] = useState('')
     const[poc, setPoc] = useState('')
-    const[phone, setPhone] = useState(0)
+    const[phone, setPhone] = useState()
     const[email, setEmail] = useState('')
     const[loginCreate, setLoginCreate] = useState(true)
     const[loginErrors, setLoginErrors] = useState()
@@ -36,18 +38,19 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                     setSessionUserData(respData)
                     setSessionProjData(handleGetProjects())
                     setLoginStatus(true)
+                    setUsername('')
+                    setPassword('')
                     navigate('/profile')        
                 })
             } else {
                 return r.json().then((errorData) => {
-                    setLoginErrors(errorData)
+                    setLoginErrors(errorData.error)
                     setSessionUserData(null)
                     setLoginStatus(false)
+                    setPassword('')        
                 })
             }})
             setCreateErrors()
-            setUsername('')
-            setPassword('')        
     } 
 
     const handleUserCreate = (e) => {
@@ -75,31 +78,29 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                         setSessionProjData(handleGetProjects())
                         setSessionUserData(respData)
                         setLoginStatus(true)
+                        setUsername('')
+                        setPassword('')
+                        setPasswordConfirmation('')
+                        setCompanyName('')
+                        setAddress('')
+                        setTradeType('')
+                        setPoc('')
+                        setPhone()
+                        setEmail('')      
                         navigate('/profile')        
                     })
                 } else {
                     return r.json().then((errorData) => {
-                        setCreateErrors(errorData)
+                        setCreateErrors(errorData.errors)
                         setLoginStatus(false)
                     })
                 }
-                
         })                   
-                setLoginErrors()
-                setUsername('')
-                setPassword('')
-                setPasswordConfirmation('')
-                setCompanyName('')
-                setAddress('')
-                setTradeType('')
-                setPoc('')
-                setPhone(0)
-                setEmail('')
     }
 
     const loginDisplay = () => {
         if (sessionUserData === null && loginStatus === false) {
-            const showLoginError = loginErrors ? loginErrors.error : null
+            const showLoginError = loginErrors ? loginErrors : null
             return (
                 <div>
                     <><h5 className='make_red'>{showLoginError}</h5></>
@@ -127,12 +128,15 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
     }
 
     const createDisplay = () => {
-        const createError = createErrors ? createErrors.error : null
+        const createErrorList = createErrors ? <h5 className='make_red'>{
+            createErrors.map((error) => {
+                return (<li>{error}</li>)
+            })}</h5> : null
         return (
             <div>
-                <><h5 className='make_red'>{createError}</h5></>
                 <form onSubmit={handleUserCreate}>
                     <h5><b>*All fields required</b></h5>
+                    {createErrorList}
                     <input
                         type='text'
                         name='username'
@@ -228,7 +232,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                 return (
                     <>
                         <h1>Login</h1>
-                        <button onClick={() => toggleButton()}>{loginCreate ? 'Signup' : 'Login'}</button>
+                        <button onClick={() => {toggleButton(); setCreateErrors()}}>{loginCreate ? 'Signup' : 'Login'}</button>
                         <br></br>
                         {loginDisplay()}
                     </>
@@ -237,7 +241,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                 return (
                     <>
                         <h1>Create Account</h1>
-                        <button onClick={() => toggleButton()}>{loginCreate ? 'Signup' : 'Login'}</button>
+                        <button onClick={() => {toggleButton(); setLoginErrors()}}>{loginCreate ? 'Signup' : 'Login'}</button>
                         <br></br>
                         {createDisplay()}
                     </>

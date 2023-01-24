@@ -7,8 +7,8 @@ class PunchItem < ApplicationRecord
     validates :notes, on: :create, presence: true, length: {minimum: 3}
     validates :complete_by, on: :create, presence: true
 
-    # validates :task, allow_blank: true, length: {minimum: 3}
-    # validates :area, allow_blank: true, length: {minimum: 3}
-    # validates :notes, allow_blank: true, length: {minimum: 3}
-    # # validates :complete_by, allow_blank: true, on: :update
+    validates :task, on: :update, allow_blank: true, length: {minimum: 3}
+    validates :area, on: :update, allow_blank: true, length: {minimum: 3}
+    validates :notes, on: :update, allow_blank: true, length: {minimum: 3}
+    # validates :complete_by, on: :update, allow_blank: true
 end

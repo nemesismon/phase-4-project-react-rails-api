@@ -8,7 +8,9 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
     const [projTitle, setProjTitle] = useState('')
     const [projAddress, setProjAddress] = useState('')
     const [projOwnerName, setProjOwnerName] = useState('')
-    const [projCompBy, setProjCompBy] = useState(null)
+    const [projCompBy, setProjCompBy] = useState()
+
+    console.log(sessionUserData)
 
     const projectsList = () => {
         if (sessionUserData === null) {
@@ -19,22 +21,15 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
             return (
                 <p>Loading...</p>
             )
-        } else if (sessionProjData !== null && loginStatus === true) {
-            return sessionProjData.map((project) => {
+        } else if (sessionProjData !== null && sessionProjData !== undefined && loginStatus === true) {
+            console.log(sessionProjData)
+            return sessionUserData.projects.map((project) => {
                 return (
                     <tr key={project.address}>
                         <td>{project.title}</td>
                         <td>{project.address}</td>
                         <td>{project.owner_name}</td>
-                        {project.users.map((user) => {
-                                return (
-                                    <tr key={Math.round(Math.random()*1000000)}>
-                                        <td>{user.company_name}</td>
-                                        <td>{user.trade_type}</td>
-                                        <td>{user.point_of_contact}</td>
-                                        <td>{user.phone}</td>
-                                    </tr>
-                        )})}
+                        <td>{project.complete_by}</td>
                     </tr>
                 )
             })
@@ -56,7 +51,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                                     <th>Project Name</th>
                                     <th>Address</th>
                                     <th>Owner Info</th>
-                                    <th>Sub Name</th>
+                                    <th>Complete By:</th>
                                 </tr>
                             {projectsList()}
                             </tbody>
@@ -87,6 +82,10 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                     return r.json().then((respData) => {
                         setSessionProjData(respData)
                         setCreateProject(false)
+                        setProjTitle('')
+                        setProjAddress('')
+                        setProjOwnerName('')
+                        setProjCompBy()            
                     })
                 } else {
                     return r.json().then((errorData) => {
@@ -94,20 +93,19 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                     })
                 }
         })
-            setProjTitle('')
-            setProjAddress('')
-            setProjOwnerName('')
-            setProjCompBy()
         }
 
         const projMessages = () => {
-                if (sessionProjData.length === 0 || sessionProjData === undefined) {
+                if (sessionProjData === undefined) {
                 return (<h5>Please Create Project to begin creating Punch Items</h5>)
             }
         }
 
         const createProjectForm = () => {
-            const showProjectErrors = projectErrors ? projectErrors.error : null
+            const showProjectErrors = projectErrors ? <h5 className='make_red'>{
+                        projectErrors.errors.map((error) => {
+                            return (<li key={error}>{error}</li>)
+                    })}</h5> : null
             return (
                 <div>
                     <h1>Add New Project</h1>
@@ -115,7 +113,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                         <input type='button' value='Projects List' onClick={() => {setCreateProject(false); setProjectErrors(null)}}/> 
                     </div>
                     <h5><b>*All fields required</b></h5>
-                    <><h5 className='make_red'>{showProjectErrors}</h5></>
+                    {showProjectErrors}
                     <form onSubmit={handleProjCreate}>
                     <input
                         type='text'
