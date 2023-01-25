@@ -5,9 +5,10 @@ import './App.css'
 import { areas } from './data'
 import { Link } from 'react-router-dom'
 
-function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionProjData, handleGetProjects, setSessionProjData}) {
+function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionProjData, handleGetProjects, setSessionProjData, projectErrors, setProjectErrors}) {
 
     const [createPunchItem, setCreatePunchItem] = useState(false)
+    const [createProject, setCreateProject] = useState(false)
     const [itemTask, setItemTask] = useState('')
     const [itemNotes, setItemNotes] = useState('')
     const [itemCompBy, setItemCompBy] = useState()
@@ -15,6 +16,10 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
     const [editErrors, setEditErrors] = useState()
     const [selectProject, setSelectProject] = useState()
     const [selectArea, setSelectArea] = useState()
+    const [projTitle, setProjTitle] = useState('')
+    const [projAddress, setProjAddress] = useState('')
+    const [projOwnerName, setProjOwnerName] = useState('')
+    const [projCompBy, setProjCompBy] = useState()
 
     const handleItemCreate = (e) => {
         e.preventDefault();
@@ -52,6 +57,39 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                 })
             }
         })
+    }
+
+    const handleProjCreate = (e) => {
+        e.preventDefault()
+
+        fetch('/projects', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: projTitle,
+                address: projAddress,
+                owner_name: projOwnerName,
+                complete_by: projCompBy,
+            })
+        })
+        .then((r) => {
+            if (r.ok) {
+                return r.json().then((respData) => {
+                    handleGetProjects()
+                    setCreateProject(false)
+                    setProjTitle('')
+                    setProjAddress('')
+                    setProjOwnerName('')
+                    setProjCompBy()            
+                })
+            } else {
+                return r.json().then((errorData) => {
+                    setProjectErrors(errorData)
+                })
+            }
+    })
     }
     
     const handleCompleteItem = (item) => {
@@ -113,6 +151,58 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
             </select>
         )
     }
+
+    const createProjectForm = () => {
+        const showProjectErrors = projectErrors ? <h5 className='make_red'>{
+                projectErrors.errors.map((error) => {
+                    return (<li key={error}>{error}</li>)
+                })}</h5> : null
+        return (
+            <div>
+                <h1>Add New Project</h1>
+                <h5><b>*All fields required</b></h5>
+                <div align='right'>
+                    <input type='button' value='Back to Punch List' onClick={() => {setCreatePunchItem(false); setCreateProject(false); setEditErrors(null)}}/> 
+                </div>
+                {showProjectErrors}
+                <form onSubmit={handleProjCreate}>
+                <input
+                    type='text'
+                    name='title'
+                    placeholder='Title'
+                    value={projTitle}
+                    onChange={(e) => setProjTitle(e.target.value)}
+                />
+                <ul></ul>
+                <input
+                    type='text'
+                    name='address'
+                    placeholder='Address'
+                    value={projAddress} 
+                    onChange={(e) => setProjAddress(e.target.value)}
+                />
+                <ul></ul>
+                <input
+                    type='text'
+                    name='owner_name'
+                    placeholder='Owner Name'
+                    value={projOwnerName} 
+                    onChange={(e) => setProjOwnerName(e.target.value)}
+                />
+                <ul></ul>
+                <input
+                    type='date'
+                    name='complete_by'
+                    placeholder='Complete By'
+                    value={projCompBy} 
+                    onChange={(e) => setProjCompBy(e.target.value)}
+                />
+                <ul></ul>
+                <button type='submit'>Submit</button>
+            </form>
+            </div>
+        )
+    }
     
     const execProfile = () => {
         if (loginStatus === false) {
@@ -124,12 +214,14 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                 <h4>Loading...</h4>
             )
         } else if (sessionUserData !== null && loginStatus === true) {
-            if (createPunchItem === false) {
+            if (createPunchItem === false && createProject === false) {
             return (
                 <div>
-                    <h1>Punch List</h1>
+                    <h1>Punch Item List</h1>
                     <h4>Welcome, {sessionUserData.point_of_contact}!</h4>
                             <div align='right'>
+                                <input type='button' value='Create Project' onClick={() => setCreateProject(true)} />
+                                <ul></ul>
                                 <input type='button' value='Create Punch Item' onClick={() => {setCreatePunchItem(true); setItemErrors(null)}}/> 
                             </div>
                         <div>
@@ -149,7 +241,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                                 {projMessages()}
                         </div>
                 </div>
-            )} else {
+            )} else if (createPunchItem === true && createProject === false) {
                 const showEditErrors = editErrors ? <h5 className='make_red'>{
                         editErrors.errors.map((error) => {
                             return (<li key={error}>{error}</li>)
@@ -200,7 +292,13 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                             <button type='submit'>Submit</button>
                         </form>
                     </div>
-                )}
+                )} else if (createPunchItem === false && createProject === true){
+                    return (
+                        <div>
+                            {createProjectForm()}
+                        </div>
+                    )
+                }
         }}
 
     return (

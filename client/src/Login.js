@@ -38,7 +38,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                     setLoginStatus(true)
                     setUsername('')
                     setPassword('')
-                    navigate('/punch_items')        
+                    navigate('/punch_item_list')        
                 })
             } else {
                 return r.json().then((errorData) => {
@@ -85,7 +85,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                         setPoc('')
                         setPhone()
                         setEmail('')      
-                        navigate('/profile')        
+                        navigate('/punch_item_list')        
                     })
                 } else {
                     return r.json().then((errorData) => {
