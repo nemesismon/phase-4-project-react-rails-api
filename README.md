@@ -14,10 +14,21 @@ FlatIron P4 Project
   1. rails db:drop
   2. rails db:create
   3. rails db:migrate
+
+->Seeds
+  1. Uncomment out desired lines in seeds.rb
+  2. rails db:seeds
   
 -> Run Application:
   1. rails s
   2. npm start --prefix client
+
+-> Using Application
+  1.  Complete user signup
+  2.  Before populating any Punch Items, navigate to Projects and create at least one project
+  3.  User can then go back to Punch Items and create items
+  4.  Active items can be updated and deleted by the user only
+  5.  Projects show user all projects their items are associated with
 
 
 -> Goals
@@ -44,9 +55,8 @@ FlatIron P4 Project
 -> Contact/Support: michael.w.kolb@gmail.com
 
 -> Roadmap: 
-  1. Include Project Name with Punch Items
-  2. Build metrics for early or overdue projects
-  
+  1. Build metrics for early or overdue projects
+  2. Additional project views  
 
 -> Authors and Acknowledgment: A big thank you to the FlatIron School and even more so to all the contributors and authors for their hard work on the tools and libraries required for the production of this application!
 

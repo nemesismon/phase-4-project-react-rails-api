@@ -10,8 +10,6 @@ function ProjectLists({ sessionUserData, setSessionUserData, loginStatus, sessio
     const [projOwnerName, setProjOwnerName] = useState('')
     const [projCompBy, setProjCompBy] = useState()
 
-    console.log(sessionUserData)
-
     const handleProjCreate = (e) => {
         e.preventDefault()
 
@@ -55,9 +53,13 @@ function ProjectLists({ sessionUserData, setSessionUserData, loginStatus, sessio
                 <p>Loading...</p>
             )
         } else if (sessionUserData !== null && sessionUserData !== undefined && loginStatus === true) {
-            // debugger
-            //problem is that the punch items are being udpdated so the project isn;t there yet to render
-            return sessionUserData.projects.map((project) => {
+
+            // current work place
+            const projArray = sessionUserData.projects
+            const projFilter = projArray.filter((value, index, projArray) => {
+                return projArray.findIndex(v => v.id === value.id) === index;
+            })
+            return projFilter.map((project) => {
                 return (
                     <tr key={project.address}>
                         <td>{project.title}</td>

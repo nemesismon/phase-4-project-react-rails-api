@@ -4,8 +4,6 @@ import './App.css';
 
 function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus, setSessionProjData, handleGetProjects}) {
 
-    console.log(sessionUserData)
-
     const[username, setUsername] = useState('')
     const[password, setPassword] = useState('')
     const[passwordConfirmation, setPasswordConfirmation] = useState('')

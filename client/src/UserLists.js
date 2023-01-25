@@ -2,11 +2,10 @@ import React, {useState} from 'react'
 import EditForm from './EditForm'
 import './UserLists.css'
 import './App.css'
-import { useNavigate, Link } from 'react-router-dom'
+import { areas } from './data'
+import { Link } from 'react-router-dom'
 
 function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionProjData, handleGetProjects, setSessionProjData}) {
-
-    // console.log(sessionUserData)
 
     const [createPunchItem, setCreatePunchItem] = useState(false)
     const [itemTask, setItemTask] = useState('')
@@ -37,10 +36,8 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
         .then((r) => {
             if (r.ok) {
                 return r.json().then((respData) => {
-                    // debugger
                     sessionUserData.punch_items.push(respData)
                     sessionUserData.projects.push(respData.project)
-                    console.log(respData)
                     setSessionUserData({ ...sessionUserData })
                     setCreatePunchItem(false)
                     setSelectProject()
@@ -58,16 +55,13 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
     }
     
     const handleCompleteItem = (item) => {
-        console.log(item)
         fetch(`/punch_items/${item.id}`, {
             method: 'DELETE',
         })
         for (let x = 0; x < sessionUserData.punch_items.length; x++) {
             if (sessionUserData.punch_items[x].id === item.id) {
                 sessionUserData.punch_items.splice(x, 1)
-                // debugger
                 const deleteIndexFind = sessionUserData.projects.findIndex(proj => proj.id === item.project_id)
-                console.log(deleteIndexFind)
                 sessionUserData.projects.splice(deleteIndexFind, 1)
             }
             setSessionUserData({ ...sessionUserData })
@@ -106,16 +100,6 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
         </select>
         )
     }
-
-    // put in data file
-    const areas = [
-        {value: 'Offsite', label: 'Offsite'},
-        {value: 'Site', label: 'Site'},
-        {value: 'Building', label: 'Building'},
-        {value: 'Electrical', label: 'Electrical'},
-        {value: 'Plumbing', label: 'Plumbing'},
-        {value: 'HVAC', label: 'HVAC'},
-    ]
 
     const areaSelector = () => {
         return (

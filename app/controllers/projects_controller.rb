@@ -18,16 +18,6 @@ class ProjectsController < ApplicationController
         end
     end
 
-    # def search
-    #     projects = Project.all.map do |project|
-    #         project.punch_items.include?(search_params)
-    #     end
-    #     if projects
-    #         render json: projects, include: punch_items, status: :ok
-    #     else
-    #         render json: {messgage: 'No projects found'}, status: :not_found
-    #     end
-    # end
 
     private
 
@@ -42,9 +32,4 @@ class ProjectsController < ApplicationController
     def render_record_not_found
         render json: {error: 'Unauthorized'}, status: :unautorized
     end
-
-    # def search_params
-    #     params.permit(:search_term)
-    # end
-
 end

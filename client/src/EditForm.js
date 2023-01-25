@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import { areas } from './data'
 
-function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserData, setEditErrors, sessionProjData}) {
+function EditForm ({item, handleCompleteItem, setSessionUserData, setEditErrors, sessionProjData}) {
 
     const [editItem, setEditItem] = useState(false)
     const [updateTask, setUpdateTask] = useState('')
@@ -13,7 +14,6 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
     const handleUpdateItem = (e) => {
         e.preventDefault();
 
-        console.log(item)
         fetch(`/punch_items/${item.id}`, {
             method: 'PATCH',
             headers: {
@@ -48,7 +48,6 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
         if (sessionProjData !== undefined) {
             return (sessionProjData.find(proj => proj.id === item.project_id)).title
         } else {
-            console.log(sessionProjData)
             return
         }
     }
@@ -65,15 +64,6 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
         </select>
         )
     }
-
-    const areas = [
-        {value: 'Offsite', label: 'Offsite'},
-        {value: 'Site', label: 'Site'},
-        {value: 'Building', label: 'Building'},
-        {value: 'Electrical', label: 'Electrical'},
-        {value: 'Plumbing', label: 'Plumbing'},
-        {value: 'HVAC', label: 'HVAC'},
-    ]
 
     const updateAreaSelector = () => {
         return (
@@ -97,7 +87,7 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
                 <td>{item.area}</td>
                 <td>{item.notes}</td>
                 <td>{item.complete_by}</td>
-                <td><input type='button' value='Edit' onClick={() => setEditItem(true)}/> &ensp;
+                <td><input type='button' value='Edit' onClick={() => setEditItem(true)}/> &ensp; &ensp;
                 <input type='button' value='Complete' onClick={() => handleCompleteItem(item)}/></td>
             </tr>
         )
