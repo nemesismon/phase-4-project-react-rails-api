@@ -16,8 +16,8 @@ function NavBar({ loginStatus, sessionUserData }) {
                         Punch Items &ensp;
                 </NavLink>
                 <NavLink style={{textDecoration: 'none'}}
-                    to='/projects'>
-                        Projects &ensp; &ensp;
+                    to='/active_project_list'>
+                        Active Project List &ensp; &ensp;
                 </NavLink>
                 <NavLink style={{textDecoration: 'none'}}
                     to='/login'>

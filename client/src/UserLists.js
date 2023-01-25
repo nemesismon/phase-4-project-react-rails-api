@@ -71,7 +71,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
     const listPunchItems = () => {
          return sessionUserData.punch_items.map((item) => {
             return (
-                <EditForm item={item} handleCompleteItem={handleCompleteItem} sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} setEditErrors={setEditErrors} projectSelector={projectSelector} areaSelector={areaSelector} selectProject={selectProject} selectArea={selectArea} sessionProjData={sessionProjData} handleGetProjects={handleGetProjects} setSessionProjData={setSessionProjData}/>
+                <EditForm key={item.id} item={item} handleCompleteItem={handleCompleteItem} sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} setEditErrors={setEditErrors} projectSelector={projectSelector} areaSelector={areaSelector} selectProject={selectProject} selectArea={selectArea} sessionProjData={sessionProjData} handleGetProjects={handleGetProjects} setSessionProjData={setSessionProjData}/>
             )
          })
     }
@@ -134,13 +134,15 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                             </div>
                         <div>
                             <table align='center' className=''>
-                                <tr>
-                                    <th>Task</th>
-                                    <th>Project</th>
-                                    <th>Area</th>
-                                    <th>Notes</th>
-                                    <th>Complete by:</th>
-                                </tr>
+                                <thead>
+                                    <tr>
+                                        <th>Task</th>
+                                        <th>Project</th>
+                                        <th>Area</th>
+                                        <th>Notes</th>
+                                        <th>Complete by:</th>
+                                    </tr>
+                                </thead>
                                     {listPunchItems()}
                             </table>
                                 {itemMessages()}

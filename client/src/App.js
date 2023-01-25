@@ -12,7 +12,6 @@ function App() {
   const [sessionUserData, setSessionUserData] = useState()
   const [sessionProjData, setSessionProjData] = useState()
   const [loginStatus, setLoginStatus] = useState(false)
-  const [userErrors, setUserErrors] = useState()
   const [projectErrors, setProjectErrors] = useState()
   const navigate = useNavigate()
 
@@ -27,7 +26,6 @@ function App() {
           })
         } else {
           return r.json().then((errorData) => {
-            setUserErrors(errorData)
             setSessionUserData(null)
             setLoginStatus(false)
             navigate('/login')    

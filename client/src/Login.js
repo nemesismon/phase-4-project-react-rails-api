@@ -38,7 +38,7 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                     setLoginStatus(true)
                     setUsername('')
                     setPassword('')
-                    navigate('/profile')        
+                    navigate('/punch_items')        
                 })
             } else {
                 return r.json().then((errorData) => {

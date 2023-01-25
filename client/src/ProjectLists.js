@@ -54,7 +54,6 @@ function ProjectLists({ sessionUserData, setSessionUserData, loginStatus, sessio
             )
         } else if (sessionUserData !== null && sessionUserData !== undefined && loginStatus === true) {
 
-            // current work place
             const projArray = sessionUserData.projects
             const projFilter = projArray.filter((value, index, projArray) => {
                 return projArray.findIndex(v => v.id === value.id) === index;

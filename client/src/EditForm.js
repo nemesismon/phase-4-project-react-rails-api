@@ -9,7 +9,6 @@ function EditForm ({item, handleCompleteItem, setSessionUserData, setEditErrors,
     const [updateArea, setUpdateArea] = useState('')
     const [updateNotes, setUpdateNotes] = useState('')
     const [updateCompleteBy, setUpdateCompleteBy] = useState()
-    const [titleFound, setTitleFound] = useState(false)
 
     const handleUpdateItem = (e) => {
         e.preventDefault();
@@ -79,17 +78,19 @@ function EditForm ({item, handleCompleteItem, setSessionUserData, setEditErrors,
     }
 
     const execForm = () => {
-    if (editItem === false && titleFound === false) {
+    if (editItem === false) {
         return (
-            <tr key={item.id}>
-                <td>{item.task}</td>
-                <td>{punchItemToProjectTitle()}</td>
-                <td>{item.area}</td>
-                <td>{item.notes}</td>
-                <td>{item.complete_by}</td>
-                <td><input type='button' value='Edit' onClick={() => setEditItem(true)}/> &ensp; &ensp;
-                <input type='button' value='Complete' onClick={() => handleCompleteItem(item)}/></td>
-            </tr>
+            <thead>
+                <tr key={item.id}>
+                    <td>{item.task}</td>
+                    <td>{punchItemToProjectTitle()}</td>
+                    <td>{item.area}</td>
+                    <td>{item.notes}</td>
+                    <td>{item.complete_by}</td>
+                    <td><input type='button' value='Edit' onClick={() => setEditItem(true)}/> &ensp; &ensp;
+                    <input type='button' value='Complete' onClick={() => handleCompleteItem(item)}/></td>
+                </tr>
+            </thead>
         )
     } else if (item !== null && editItem === true){
             return ( 
