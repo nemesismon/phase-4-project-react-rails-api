@@ -52,7 +52,7 @@ function App() {
     })
   }
 
-  console.log(sessionUserData)
+  // console.log(sessionUserData)
   
   const execApp = () => {
     return (
@@ -61,12 +61,12 @@ function App() {
           Welcome to Builder Exchange
         </header>
           <div>
-              <NavBar loginStatus={loginStatus} />
+              <NavBar loginStatus={loginStatus} sessionUserData={sessionUserData}/>
                 <Routes>
                   <Route path='/' element={<Home />} />
                   <Route path='/profile' element={<UserLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} sessionProjData={sessionProjData} handleGetProjects={handleGetProjects} setSessionProjData={setSessionProjData}/>} />
-                  <Route path='/projects' element={<ProjectLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData} projectErrors={projectErrors} setProjectErrors={setProjectErrors}/>} />
-                  <Route path='/login' element={<Login sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} setLoginStatus={setLoginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData}/>} />
+                  <Route path='/projects' element={<ProjectLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData} projectErrors={projectErrors} setProjectErrors={setProjectErrors} handleGetProjects={handleGetProjects}/>} />
+                  <Route path='/login' element={<Login sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} setLoginStatus={setLoginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData} handleGetProjects={handleGetProjects}/>} />
                 </Routes>
           </div>
       </div>

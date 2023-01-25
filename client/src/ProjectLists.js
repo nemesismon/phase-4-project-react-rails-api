@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './UserLists.css'
 import './App.css'
 
-function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessionProjData, projectErrors, setProjectErrors }) {
+function ProjectLists({ sessionUserData, setSessionUserData, loginStatus, sessionProjData, projectErrors, setProjectErrors, handleGetProjects }) {
 
     const [createProject, setCreateProject] = useState(false)
     const [projTitle, setProjTitle] = useState('')
@@ -12,17 +12,51 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
 
     console.log(sessionUserData)
 
+    const handleProjCreate = (e) => {
+        e.preventDefault()
+
+        fetch('/projects', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: projTitle,
+                address: projAddress,
+                owner_name: projOwnerName,
+                complete_by: projCompBy,
+            })
+        })
+        .then((r) => {
+            if (r.ok) {
+                return r.json().then((respData) => {
+                    handleGetProjects()
+                    setCreateProject(false)
+                    setProjTitle('')
+                    setProjAddress('')
+                    setProjOwnerName('')
+                    setProjCompBy()            
+                })
+            } else {
+                return r.json().then((errorData) => {
+                    setProjectErrors(errorData)
+                })
+            }
+    })
+    }
+
     const projectsList = () => {
         if (sessionUserData === null) {
             return (
                 <p>Please login</p>
             )            
-        } else if (sessionProjData === null && loginStatus === true) {
+        } else if (sessionUserData === null && loginStatus === true) {
             return (
                 <p>Loading...</p>
             )
-        } else if (sessionProjData !== null && sessionProjData !== undefined && loginStatus === true) {
-            console.log(sessionProjData)
+        } else if (sessionUserData !== null && sessionUserData !== undefined && loginStatus === true) {
+            // debugger
+            //problem is that the punch items are being udpdated so the project isn;t there yet to render
             return sessionUserData.projects.map((project) => {
                 return (
                     <tr key={project.address}>
@@ -39,7 +73,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
     const projectsView = () => {
             return (
                 <div>
-                    <h1>Project List</h1>
+                    <h1>{sessionUserData.point_of_contact} Project List</h1>
                     <div align='right'>
                         <input type='button' value='Create Project' onClick={() => setCreateProject(true)}/> 
                     </div>
@@ -60,39 +94,6 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData, setSessio
                     </div>
                 </div>
             )
-        }
-
-        const handleProjCreate = (e) => {
-            e.preventDefault()
-
-            fetch('/projects', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    title: projTitle,
-                    address: projAddress,
-                    owner_name: projOwnerName,
-                    complete_by: projCompBy,
-                })
-            })
-            .then((r) => {
-                if (r.ok) {
-                    return r.json().then((respData) => {
-                        setSessionProjData(respData)
-                        setCreateProject(false)
-                        setProjTitle('')
-                        setProjAddress('')
-                        setProjOwnerName('')
-                        setProjCompBy()            
-                    })
-                } else {
-                    return r.json().then((errorData) => {
-                        setProjectErrors(errorData)
-                    })
-                }
-        })
         }
 
         const projMessages = () => {

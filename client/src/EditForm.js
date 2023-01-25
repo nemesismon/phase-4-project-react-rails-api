@@ -13,6 +13,7 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
     const handleUpdateItem = (e) => {
         e.preventDefault();
 
+        console.log(item)
         fetch(`/punch_items/${item.id}`, {
             method: 'PATCH',
             headers: {
@@ -29,12 +30,6 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
         .then((r) => {
             if (r.ok) {
                 return r.json().then((respData) => {
-                    console.log(respData)
-                    // item.project_id = respData.project_id ? respData.project_id : item.project_id
-                    // item.task = respData.task ? respData.task : item.task
-                    // item.area = respData.area ? respData.area : item.area
-                    // item.notes = respData.notes ? respData.notes : item.notes
-                    // item.complete_by = respData.complete_by ? respData.complete_by : item.complete_by
                     setSessionUserData(respData)
                     setUpdateTask('')
                     setUpdateNotes('')
@@ -50,11 +45,11 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
     }
 
     const punchItemToProjectTitle = () => {
-        // debugger
         if (sessionProjData !== undefined) {
             return (sessionProjData.find(proj => proj.id === item.project_id)).title
         } else {
-            return ( <p>Loading...</p>)
+            console.log(sessionProjData)
+            return
         }
     }
 
@@ -102,8 +97,8 @@ function EditForm ({item, handleCompleteItem, sessionUserData, setSessionUserDat
                 <td>{item.area}</td>
                 <td>{item.notes}</td>
                 <td>{item.complete_by}</td>
-                <td><input type='button' value='Edit' onClick={() => setEditItem(true)}/></td>
-                <td><input type='button' value='Complete' onClick={() => handleCompleteItem(item)}/></td>
+                <td><input type='button' value='Edit' onClick={() => setEditItem(true)}/> &ensp;
+                <input type='button' value='Complete' onClick={() => handleCompleteItem(item)}/></td>
             </tr>
         )
     } else if (item !== null && editItem === true){

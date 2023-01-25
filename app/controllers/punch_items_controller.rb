@@ -5,8 +5,8 @@ class PunchItemsController < ApplicationController
     before_action :find_user
     
     def create
-        @user.punch_items.create!(punch_item_params)
-        render json: @user, status: :accepted
+        item = @user.punch_items.create!(punch_item_params)
+        render json: item, include: ['project'], status: :accepted
     end
 
     def update

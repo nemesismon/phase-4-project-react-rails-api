@@ -12,8 +12,7 @@ class ProjectsController < ApplicationController
         project = Project.new(project_params)
         if project.valid?
             project.save!
-            projects = Project.all
-            render json: projects, status: :accepted
+            render json: project, status: :accepted
         else
             render json: {errors: project.errors.full_messages}, status: :unprocessable_entity
         end
