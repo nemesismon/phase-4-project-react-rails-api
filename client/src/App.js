@@ -59,7 +59,7 @@ function App() {
           <div>
               <NavBar loginStatus={loginStatus} sessionUserData={sessionUserData}/>
                 <Routes>
-                  <Route path='/' element={<Home />} />
+                  <Route path='/' element={<Home sessionUserData={sessionUserData} loginStatus={loginStatus}/>} />
                   <Route path='/punch_item_list' element={<UserLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} sessionProjData={sessionProjData} handleGetProjects={handleGetProjects} setSessionProjData={setSessionProjData} projectErrors={projectErrors} setProjectErrors={setProjectErrors}/>} />
                   <Route path='/active_project_list' element={<ProjectLists sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData} projectErrors={projectErrors} setProjectErrors={setProjectErrors} handleGetProjects={handleGetProjects}/>} />
                   <Route path='/login' element={<Login sessionUserData={sessionUserData} setSessionUserData={setSessionUserData} loginStatus={loginStatus} setLoginStatus={setLoginStatus} sessionProjData={sessionProjData} setSessionProjData={setSessionProjData} handleGetProjects={handleGetProjects}/>} />

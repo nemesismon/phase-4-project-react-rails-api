@@ -45,7 +45,7 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData }) {
                                     <th>Owner Info</th>
                                     <th>Complete By:</th>
                                 </tr>
-                            {projectsList()}
+                                {projectsList()}
                             </tbody>
                         </table>
                         {projMessages()}
@@ -55,8 +55,8 @@ function ProjectLists({ sessionUserData, loginStatus, sessionProjData }) {
         }
 
         const projMessages = () => {
-                if (sessionProjData === undefined) {
-                return (<h5>Please Create Project to begin creating Punch Items</h5>)
+                if (sessionProjData === []) {
+                    return (<h5>There are currently no Active Projects</h5>)
             }
         }
 

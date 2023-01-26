@@ -54,7 +54,7 @@ function EditForm ({item, handleCompleteItem, setSessionUserData, setEditErrors,
     const updateProjSelector = () => {
         return (
         <select name='update_project_selector' onChange={e => setUpdateProject(e.target.value)}>
-            <option value={''} label={punchItemToProjectTitle()} disabled selected>Select Project</option>
+            <option value={''} label={punchItemToProjectTitle()} disabled >Select Project</option>
             {sessionProjData.map((project) => {
                 return (
                     <option key={project.id} value={project.id}>{project.title}</option>
@@ -66,8 +66,8 @@ function EditForm ({item, handleCompleteItem, setSessionUserData, setEditErrors,
 
     const updateAreaSelector = () => {
         return (
-            <select name='update_area-selector' onChange={e => setUpdateArea(e.target.value)}>
-                <option value={''} label={item.area} disabled selected>Select Area</option>
+            <select name='update_area_selector' onChange={e => setUpdateArea(e.target.value)}>
+                <option value={''} label={item.area} disabled >Select Area</option>
                 {areas.map((area) => {
                     return (
                         <option key={area.id} value={area.value}>{area.value}</option>
@@ -80,7 +80,7 @@ function EditForm ({item, handleCompleteItem, setSessionUserData, setEditErrors,
     const execForm = () => {
     if (editItem === false) {
         return (
-            <thead>
+            <tbody>
                 <tr key={item.id}>
                     <td>{item.task}</td>
                     <td>{punchItemToProjectTitle()}</td>
@@ -90,18 +90,20 @@ function EditForm ({item, handleCompleteItem, setSessionUserData, setEditErrors,
                     <td><input type='button' value='Edit' onClick={() => setEditItem(true)}/> &ensp; &ensp;
                     <input type='button' value='Complete' onClick={() => handleCompleteItem(item)}/></td>
                 </tr>
-            </thead>
+            </tbody>
         )
     } else if (item !== null && editItem === true){
             return ( 
-            <tr key={item.id}>
-                    <td><input type='text' name='task' placeholder={item.task} value={updateTask} onChange={e => {setUpdateTask(e.target.value)}} /></td>
-                    <td>{updateProjSelector()}</td>
-                    <td>{updateAreaSelector()}</td>
-                    <td><input type='text' name='notes' placeholder={item.notes} value={updateNotes} onChange={e => {setUpdateNotes(e.target.value)}} /></td>
-                    <td><input type='date' name='complete_by' defaultValue={item.complete_by} value={updateCompleteBy} onChange={e => {setUpdateCompleteBy(e.target.value)}} /></td>
-                    <td><input type='button' value='Save' onClick={e => handleUpdateItem(e)} /></td>
-            </tr>
+            <tbody>
+                <tr key={item.id}>
+                        <td><input type='text' name='task' placeholder={item.task} value={updateTask} onChange={e => {setUpdateTask(e.target.value)}} /></td>
+                        <td>{updateProjSelector()}</td>
+                        <td>{updateAreaSelector()}</td>
+                        <td><input type='text' name='notes' placeholder={item.notes} value={updateNotes} onChange={e => {setUpdateNotes(e.target.value)}} /></td>
+                        <td><input type='date' name='complete_by' defaultValue={item.complete_by} value={updateCompleteBy} onChange={e => {setUpdateCompleteBy(e.target.value)}} /></td>
+                        <td><input type='button' value='Save' onClick={e => handleUpdateItem(e)} /></td>
+                </tr>
+            </tbody>
             )
     }}
 

@@ -70,29 +70,29 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
                 phone: phone,
                 email: email
             }),
-        })  .then((r) => {
-                if (r.ok) {
-                    return r.json().then((respData) => {
-                        setSessionProjData(handleGetProjects())
-                        setSessionUserData(respData)
-                        setLoginStatus(true)
-                        setUsername('')
-                        setPassword('')
-                        setPasswordConfirmation('')
-                        setCompanyName('')
-                        setAddress('')
-                        setTradeType('')
-                        setPoc('')
-                        setPhone()
-                        setEmail('')      
-                        navigate('/punch_item_list')        
-                    })
-                } else {
-                    return r.json().then((errorData) => {
-                        setCreateErrors(errorData.errors)
-                        setLoginStatus(false)
-                    })
-                }
+        }).then((r) => {
+            if (r.ok) {
+                return r.json().then((respData) => {
+                    setSessionProjData(handleGetProjects())
+                    setSessionUserData(respData)
+                    setLoginStatus(true)
+                    setUsername('')
+                    setPassword('')
+                    setPasswordConfirmation('')
+                    setCompanyName('')
+                    setAddress('')
+                    setTradeType('')
+                    setPoc('')
+                    setPhone()
+                    setEmail('')      
+                    navigate('/punch_item_list')        
+                })
+            } else {
+                return r.json().then((errorData) => {
+                    setCreateErrors(errorData.errors)
+                    setLoginStatus(false)
+                })
+            }
         })                   
     }
 
@@ -128,13 +128,13 @@ function Login({setSessionUserData, sessionUserData, loginStatus, setLoginStatus
     const createDisplay = () => {
         const createErrorList = createErrors ? <h5 className='make_red'>{
             createErrors.map((error) => {
-                return (<li>{error}</li>)
+                return (<li key={error}>{error}</li>)
             })}</h5> : null
         return (
             <div>
                 <form onSubmit={handleUserCreate}>
                     <h5><b>*All fields required</b></h5>
-                    {createErrorList}
+                        {createErrorList}
                     <input
                         type='text'
                         name='username'

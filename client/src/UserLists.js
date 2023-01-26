@@ -122,27 +122,27 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
 
     const projMessages = () => {
         if (sessionProjData === undefined) {
-        return (<h5>Please add a <Link to={'/projects'}>Project</Link> to begin creating Punch Items</h5>)
+            return (<h5>Please add a <Link to={'/projects'}>Project</Link> to begin creating Punch Items</h5>)
         }
     }
 
     const projectSelector = () => {
         return (
-        <select name='project_selector' onChange={e => setSelectProject(e.target.value)}>
-            <option value={''} disabled selected>Select Project</option>
-            {sessionProjData.map((project) => {
-                return (
-                    <option key={project.id} value={project.id}>{project.title}</option>
-                )
-            })}
-        </select>
+            <select name='project_selector' onChange={e => setSelectProject(e.target.value)}>
+                <option value={''} disabled >Select Project</option>
+                {sessionProjData.map((project) => {
+                    return (
+                        <option key={project.id} value={project.id}>{project.title}</option>
+                    )
+                })}
+            </select>
         )
     }
 
     const areaSelector = () => {
         return (
             <select name='area-selector' onChange={e => setSelectArea(e.target.value)}>
-                <option value={''} disabled selected>Select Area</option>
+                <option value={''} disabled >Select Area</option>
                 {areas.map((area) => {
                     return (
                         <option key={area.id} value={area.value}>{area.value}</option>
@@ -160,46 +160,46 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
         return (
             <div>
                 <h1>Add New Project</h1>
-                <h5><b>*All fields required</b></h5>
                 <div align='right'>
                     <input type='button' value='Back to Punch List' onClick={() => {setCreatePunchItem(false); setCreateProject(false); setEditErrors(null)}}/> 
                 </div>
-                {showProjectErrors}
+                <h5><b>*All fields required</b></h5>
+                    {showProjectErrors}
                 <form onSubmit={handleProjCreate}>
-                <input
-                    type='text'
-                    name='title'
-                    placeholder='Title'
-                    value={projTitle}
-                    onChange={(e) => setProjTitle(e.target.value)}
-                />
-                <ul></ul>
-                <input
-                    type='text'
-                    name='address'
-                    placeholder='Address'
-                    value={projAddress} 
-                    onChange={(e) => setProjAddress(e.target.value)}
-                />
-                <ul></ul>
-                <input
-                    type='text'
-                    name='owner_name'
-                    placeholder='Owner Name'
-                    value={projOwnerName} 
-                    onChange={(e) => setProjOwnerName(e.target.value)}
-                />
-                <ul></ul>
-                <input
-                    type='date'
-                    name='complete_by'
-                    placeholder='Complete By'
-                    value={projCompBy} 
-                    onChange={(e) => setProjCompBy(e.target.value)}
-                />
-                <ul></ul>
-                <button type='submit'>Submit</button>
-            </form>
+                    <input
+                        type='text'
+                        name='title'
+                        placeholder='Title'
+                        value={projTitle}
+                        onChange={(e) => setProjTitle(e.target.value)}
+                    />
+                    <ul></ul>
+                    <input
+                        type='text'
+                        name='address'
+                        placeholder='Address'
+                        value={projAddress} 
+                        onChange={(e) => setProjAddress(e.target.value)}
+                    />
+                    <ul></ul>
+                    <input
+                        type='text'
+                        name='owner_name'
+                        placeholder='Owner Name'
+                        value={projOwnerName} 
+                        onChange={(e) => setProjOwnerName(e.target.value)}
+                    />
+                    <ul></ul>
+                    <input
+                        type='date'
+                        name='complete_by'
+                        placeholder='Complete By'
+                        value={projCompBy} 
+                        onChange={(e) => setProjCompBy(e.target.value)}
+                    />
+                    <ul></ul>
+                    <button type='submit'>Submit</button>
+                </form>
             </div>
         )
     }
@@ -218,7 +218,6 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
             return (
                 <div>
                     <h1>Punch Item List</h1>
-                    <h4>Welcome, {sessionUserData.point_of_contact}!</h4>
                             <div align='right'>
                                 <input type='button' value='Create Project' onClick={() => setCreateProject(true)} />
                                 <ul></ul>
@@ -254,12 +253,12 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                 return (
                     <div>
                         <h1>Add New Punch Item</h1>
-                        <div align='right'>
-                            <input type='button' value='Back to Punch List' onClick={() => {setCreatePunchItem(false); setEditErrors(null)}}/> 
-                        </div>
+                            <div align='right'>
+                                <input type='button' value='Back to Punch List' onClick={() => {setCreatePunchItem(false); setEditErrors(null)}}/> 
+                            </div>
                         <h5><b>*All fields required</b></h5>
-                        {showItemErrors}
-                        {showEditErrors}
+                            {showItemErrors}
+                            {showEditErrors}
                         <form onSubmit={handleItemCreate}>
                             {projectSelector()}
                             <ul></ul>
@@ -271,7 +270,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                                 onChange={(e) => setItemTask(e.target.value)}
                             />
                             <ul></ul>
-                            {areaSelector()}
+                                {areaSelector()}
                             <ul></ul>
                             <input
                                 type='text'
