@@ -54,7 +54,7 @@ function EditForm ({item, handleCompleteItem, setSessionUserData, setEditErrors,
     const updateProjSelector = () => {
         return (
         <select name='update_project_selector' onChange={e => setUpdateProject(e.target.value)}>
-            <option value={''} label={punchItemToProjectTitle()} disabled >Select Project</option>
+            <option value={''} label={punchItemToProjectTitle()} >Select Project</option>
             {sessionProjData.map((project) => {
                 return (
                     <option key={project.id} value={project.id}>{project.title}</option>
@@ -67,7 +67,7 @@ function EditForm ({item, handleCompleteItem, setSessionUserData, setEditErrors,
     const updateAreaSelector = () => {
         return (
             <select name='update_area_selector' onChange={e => setUpdateArea(e.target.value)}>
-                <option value={''} label={item.area} disabled >Select Area</option>
+                <option value={''} label={item.area} >Select Area</option>
                 {areas.map((area) => {
                     return (
                         <option key={area.id} value={area.value}>{area.value}</option>

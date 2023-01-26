@@ -15,9 +15,9 @@ FlatIron P4 Project
   2. rails db:create
   3. rails db:migrate
 
-->Seeds
+-> Seeds
   1. Uncomment out desired lines in seeds.rb
-  2. rails db:seeds
+  2. rails db:seed
   
 -> Run Application:
   1. rails s

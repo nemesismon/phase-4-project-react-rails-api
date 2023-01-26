@@ -11,15 +11,15 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
     const [createProject, setCreateProject] = useState(false)
     const [itemTask, setItemTask] = useState('')
     const [itemNotes, setItemNotes] = useState('')
-    const [itemCompBy, setItemCompBy] = useState()
-    const [itemErrors, setItemErrors] = useState()
-    const [editErrors, setEditErrors] = useState()
-    const [selectProject, setSelectProject] = useState()
-    const [selectArea, setSelectArea] = useState()
+    const [itemCompBy, setItemCompBy] = useState('')
+    const [itemErrors, setItemErrors] = useState('')
+    const [editErrors, setEditErrors] = useState('')
+    const [selectProject, setSelectProject] = useState('')
+    const [selectArea, setSelectArea] = useState('')
     const [projTitle, setProjTitle] = useState('')
     const [projAddress, setProjAddress] = useState('')
     const [projOwnerName, setProjOwnerName] = useState('')
-    const [projCompBy, setProjCompBy] = useState()
+    const [projCompBy, setProjCompBy] = useState('')
 
     const handleItemCreate = (e) => {
         e.preventDefault();
@@ -79,10 +79,11 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
                 return r.json().then((respData) => {
                     handleGetProjects()
                     setCreateProject(false)
+                    setProjectErrors()
                     setProjTitle('')
                     setProjAddress('')
                     setProjOwnerName('')
-                    setProjCompBy()            
+                    setProjCompBy('')            
                 })
             } else {
                 return r.json().then((errorData) => {
@@ -129,7 +130,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
     const projectSelector = () => {
         return (
             <select name='project_selector' onChange={e => setSelectProject(e.target.value)}>
-                <option value={''} disabled >Select Project</option>
+                <option value={''} defaultValue={'Select Project'} >Select Project</option>
                 {sessionProjData.map((project) => {
                     return (
                         <option key={project.id} value={project.id}>{project.title}</option>
@@ -142,7 +143,7 @@ function UserLists({sessionUserData, setSessionUserData, loginStatus, sessionPro
     const areaSelector = () => {
         return (
             <select name='area-selector' onChange={e => setSelectArea(e.target.value)}>
-                <option value={''} disabled >Select Area</option>
+                <option value={''} defaultValue={'Select Area'} >Select Area</option>
                 {areas.map((area) => {
                     return (
                         <option key={area.id} value={area.value}>{area.value}</option>
